@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VOCABTOK — Learn English</title>
+<style>
+:root{
+  --bg:#000000;
+  --bg2:#121212;
+  --bg3:#1f1f1f;
+  --cyan:#25F4EE;
+  --pink:#FE2C55;
+  --text:#FFFFFF;
+  --muted:#8A8B91;
+  --ok:#00E676;
+  --err:#FF3B30;
+  --border:#2a2a2a;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,sans-serif;}
+body{background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
+button{cursor:pointer;border:none;font-family:inherit;color:inherit;background:none;}
+input{font-family:inherit;}
+::-webkit-scrollbar{width:8px;}
+::-webkit-scrollbar-thumb{background:#333;border-radius:4px;}
+
+/* NAVBAR */
+nav{position:fixed;top:0;left:0;right:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--border);z-index:500;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-size:22px;font-weight:900;letter-spacing:-0.5px;background:linear-gradient(90deg,var(--cyan),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 8px rgba(37,244,238,0.3));}
+.nav-links{display:flex;gap:16px;}
+.nav-links button{font-size:15px;font-weight:700;color:var(--muted);transition:.2s;}
+.nav-links button:hover,.nav-links button.active{color:var(--cyan);text-shadow:0 0 10px rgba(37,244,238,0.5);}
+
+/* MAIN CONTAINER */
+main{max-width:1000px;margin:0 auto;padding:90px 20px 80px;}
+
+/* PAGE CONTAINER */
+.page{display:none;animation:fadeIn .3s;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* TYPOGRAPHY */
+h1{font-size:32px;font-weight:900;margin-bottom:8px;letter-spacing:-0.5px;text-shadow:0 0 15px rgba(37,244,238,0.4);}
+h2{font-size:22px;font-weight:800;margin:0 0 12px;}
+.sub{color:var(--muted);font-size:15px;margin-bottom:24px;}
+
+/* BUTTONS */
+.btn{background:var(--cyan);color:#000;padding:12px 24px;border-radius:12px;font-weight:900;font-size:15px;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 0 15px rgba(37,244,238,0.3);}
+.btn:hover{filter:brightness(1.1);transform:translateY(-2px);box-shadow:0 0 25px rgba(37,244,238,0.5);}
+.btn.pink{background:var(--pink);color:#fff;box-shadow:0 0 15px rgba(254,44,85,0.3);}
+.btn.pink:hover{box-shadow:0 0 25px rgba(254,44,85,0.5);}
+.btn.ghost{background:var(--bg3);color:var(--text);box-shadow:none;border:1px solid var(--border);}
+.btn.ghost:hover{background:#2a2a2a;}
+.btn.sm{padding:8px 16px;font-size:14px;border-radius:10px;}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
+
+/* DISCOVER - VIDEO CARDS */
+.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;}
+.video-card{background:var(--bg2);border-radius:20px;overflow:hidden;border:1px solid var(--border);transition:all .25s;display:flex;flex-direction:column;}
+.video-card:hover{border-color:var(--cyan);transform:translateY(-4px);box-shadow:0 8px 30px rgba(37,244,238,0.15);}
+.video-thumb{aspect-ratio:9/13;background:#111;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.video-thumb img{width:100%;height:100%;object-fit:cover;opacity:0.8;}
+.video-thumb .play-btn{position:absolute;width:64px;height:64px;border-radius:50%;background:rgba(0,0,0,0.6);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--cyan);backdrop-filter:blur(5px);transition:.2s;}
+.video-card:hover .play-btn{transform:scale(1.1);box-shadow:0 0 20px rgba(37,244,238,0.6);background:rgba(37,244,238,0.2);}
+.video-info{padding:16px;flex:1;display:flex;flex-direction:column;}
+.video-info h3{font-size:16px;font-weight:800;margin-bottom:6px;word-break:break-all;color:#fff;}
+.video-meta{font-size:12px;color:var(--muted);display:flex;gap:10px;margin-bottom:16px;}
+.tag{display:inline-block;font-size:11px;font-weight:800;padding:4px 10px;border-radius:20px;background:rgba(37,244,238,0.15);color:var(--cyan);border:1px solid rgba(37,244,238,0.3);}
+.tag.pink{background:rgba(254,44,85,0.15);color:var(--pink);border-color:rgba(254,44,85,0.3);}
+
+/* VIDEO PLAYER OVERLAY */
+.player-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px);}
+.player-overlay.open{display:flex;}
+.player-shell{position:relative;width:100%;max-width:420px;aspect-ratio:9/16;background:#000;border-radius:20px;overflow:hidden;box-shadow:0 0 60px rgba(37,244,238,0.2);border:1px solid #333;}
+.player-shell video{width:100%;height:100%;object-fit:cover;background:#000;}
+.close-player{position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;font-size:20px;z-index:10;color:#fff;transition:.2s;border:1px solid rgba(255,255,255,0.2);}
+.close-player:hover{background:var(--pink);}
+.after-video-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.9);display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:30px;text-align:center;z-index:9;backdrop-filter:blur(10px);}
+.after-video-overlay.open{display:flex;}
+.after-video-overlay h2{color:var(--cyan);font-size:24px;font-weight:900;text-shadow:0 0 15px rgba(37,244,238,0.5);}
+.after-video-overlay .badge{background:rgba(0,230,118,0.2);color:var(--ok);padding:6px 16px;border-radius:20px;font-weight:800;font-size:13px;border:1px solid rgba(0,230,118,0.4);margin-bottom:10px;}
+
+/* PRACTICE SECTION */
+.lesson-head{background:linear-gradient(135deg,rgba(37,244,238,0.1),rgba(254,44,85,0.1)),var(--bg2);border-radius:22px;padding:26px;margin-bottom:24px;border:1px solid var(--border);}
+.lesson-head .lv-top{font-size:13px;font-weight:900;color:var(--cyan);text-transform:uppercase;letter-spacing:1.5px;text-shadow:0 0 10px rgba(37,244,238,0.4);}
+.lesson-head h2{font-size:28px;margin:8px 0;color:#fff;}
+.lesson-head .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+.chip{background:var(--bg3);padding:5px 14px;border-radius:20px;font-size:12px;font-weight:700;color:var(--muted);border:1px solid var(--border);}
+.chip.cyan{color:var(--cyan);border-color:rgba(37,244,238,0.3);}
+.chip.pink{color:var(--pink);border-color:rgba(254,44,85,0.3);}
+.vocab-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+.vocab-chips span{background:rgba(37,244,238,0.08);color:var(--cyan);padding:6px 14px;border-radius:10px;font-size:13px;font-weight:600;border:1px solid rgba(37,244,238,0.2);}
+
+.task{background:var(--bg2);border-radius:20px;padding:24px;margin-bottom:20px;border:1px solid var(--border);}
+.task .task-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+.task .task-title{font-size:18px;font-weight:900;color:#fff;}
+.task .task-num{background:rgba(254,44,85,0.15);color:var(--pink);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:900;letter-spacing:1px;border:1px solid rgba(254,44,85,0.3);}
+.instr{background:var(--bg3);border-radius:12px;padding:12px 16px;font-size:14px;color:var(--muted);margin-bottom:18px;border-left:4px solid var(--cyan);}
+
+/* MATCHING */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.match-cell{background:var(--bg3);border-radius:12px;padding:14px 16px;font-size:15px;border:2px solid transparent;cursor:pointer;transition:all .15s;font-weight:600;display:flex;align-items:center;gap:10px;min-height:50px;}
+.match-cell:hover{background:#2a2a2a;}
+.match-cell.selected{border-color:var(--cyan);background:rgba(37,244,238,0.1);box-shadow:0 0 15px rgba(37,244,238,0.2);}
+.match-cell.matched{background:rgba(37,244,238,0.05);color:var(--cyan);cursor:default;opacity:.6;}
+.match-cell.finished-ok{border-color:var(--ok);background:rgba(0,230,118,0.15);}
+.match-cell.finished-bad{border-color:var(--err);background:rgba(255,59,48,0.15);}
+.match-cell .num{font-weight:900;color:var(--pink);min-width:20px;}
+
+/* CHOICE / RADIO */
+.question{background:var(--bg3);border-radius:14px;padding:16px;margin-bottom:12px;}
+.question .q-text{font-size:16px;font-weight:600;margin-bottom:12px;line-height:1.5;color:#fff;}
+.options{display:grid;gap:8px;}
+.option{background:var(--bg2);border:2px solid var(--border);border-radius:12px;padding:12px 16px;cursor:pointer;font-size:15px;transition:all .15s;display:flex;align-items:center;gap:12px;}
+.option:hover{border-color:#444;}
+.option.selected{border-color:var(--cyan);background:rgba(37,244,238,0.05);box-shadow:0 0 10px rgba(37,244,238,0.1);}
+.option.correct{border-color:var(--ok);background:rgba(0,230,118,0.1);color:var(--ok);}
+.option.wrong{border-color:var(--err);background:rgba(255,59,48,0.1);color:var(--err);}
+.option .dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--muted);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;transition:all .15s;}
+.option.selected .dot{border-color:var(--cyan);background:var(--cyan);box-shadow:0 0 8px var(--cyan);}
+.option.selected .dot::after{content:"";width:8px;height:8px;border-radius:50%;background:#000;}
+.option.correct .dot{border-color:var(--ok);background:var(--ok);color:#000;}
+.option.wrong .dot{border-color:var(--err);background:var(--err);color:#fff;}
+
+/* FILL / INPUT */
+.fill-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;background:var(--bg3);border-radius:12px;padding:14px 16px;font-size:16px;color:#fff;}
+.fill-line input{background:var(--bg);border:2px solid #333;color:var(--cyan);padding:8px 14px;border-radius:10px;font-size:16px;min-width:140px;font-weight:700;transition:all .2s;}
+.fill-line input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 10px rgba(37,244,238,0.2);}
+.fill-line input.correct{border-color:var(--ok);color:var(--ok);background:rgba(0,230,118,0.1);}
+.fill-line input.wrong{border-color:var(--err);color:var(--err);background:rgba(255,59,48,0.1);}
+.fix-show{font-size:14px;color:var(--ok);font-weight:800;margin-left:6px;}
+.word-bank{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.word-bank span{background:rgba(254,44,85,0.1);color:var(--pink);padding:6px 16px;border-radius:20px;font-size:14px;font-weight:700;border:1px solid rgba(254,44,85,0.3);}
+
+/* TRUE/FALSE */
+.tf-row{display:flex;justify-content:space-between;align-items:center;gap:16px;background:var(--bg3);border-radius:12px;padding:14px 16px;margin-bottom:10px;flex-wrap:wrap;}
+.tf-row .stmt{font-size:15px;flex:1;min-width:200px;color:#fff;}
+.tf-btns{display:flex;gap:8px;}
+.tf-btn{padding:8px 20px;border-radius:10px;background:var(--bg);font-size:14px;font-weight:800;border:2px solid var(--border);transition:all .15s;color:var(--muted);}
+.tf-btn:hover{border-color:#555;color:#fff;}
+.tf-btn.sel-true{border-color:var(--ok);background:rgba(0,230,118,0.15);color:var(--ok);box-shadow:0 0 10px rgba(0,230,118,0.2);}
+.tf-btn.sel-false{border-color:var(--err);background:rgba(255,59,48,0.15);color:var(--err);box-shadow:0 0 10px rgba(255,59,48,0.2);}
+.tf-btn.reveal-correct{border-color:var(--ok);background:rgba(0,230,118,0.15);color:var(--ok);}
+.tf-btn.reveal-wrong{border-color:var(--err);background:rgba(255,59,48,0.15);color:var(--err);}
+
+/* SENTENCE ORDER */
+.order-question{background:var(--bg3);border-radius:14px;padding:16px;margin-bottom:14px;}
+.order-question .num-lbl{font-size:13px;color:var(--muted);margin-bottom:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
+.order-words{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+.order-word{background:var(--bg2);color:#fff;padding:8px 16px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;user-select:none;border:1px solid #333;}
+.order-word:hover{transform:translateY(-2px);border-color:var(--cyan);color:var(--cyan);}
+.order-word.used{opacity:.2;cursor:not-allowed;transform:none;border-color:transparent;}
+.order-answer{background:var(--bg);border:2px dashed #333;border-radius:12px;padding:12px 16px;min-height:50px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:15px;margin-bottom:10px;}
+.order-answer .placed{background:linear-gradient(90deg,var(--cyan),var(--pink));color:#000;padding:6px 14px;border-radius:8px;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 0 10px rgba(37,244,238,0.3);}
+.order-answer .ph{color:var(--muted);font-size:14px;font-style:italic;}
+.order-feedback{font-size:14px;padding:10px 14px;border-radius:10px;margin-top:8px;display:none;font-weight:600;}
+.order-feedback.ok{display:block;background:rgba(0,230,118,0.15);color:var(--ok);border:1px solid rgba(0,230,118,0.3);}
+.order-feedback.bad{display:block;background:rgba(255,59,48,0.15);color:var(--err);border:1px solid rgba(255,59,48,0.3);}
+
+/* ACTIONS & RESULTS */
+.actions-bar{position:sticky;bottom:0;background:rgba(0,0,0,0.85);padding:16px 0;margin-top:24px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;border-top:1px solid var(--border);z-index:50;backdrop-filter:blur(12px);}
+.results-box{background:linear-gradient(135deg,rgba(37,244,238,0.1),rgba(254,44,85,0.1)),var(--bg2);border-radius:22px;padding:32px;margin-top:24px;text-align:center;border:2px solid var(--cyan);display:none;box-shadow:0 0 40px rgba(37,244,238,0.15);}
+.results-box.show{display:block;animation:fadeIn .4s;}
+.results-box .score-big{font-size:64px;font-weight:900;background:linear-gradient(90deg,var(--cyan),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1;filter:drop-shadow(0 0 10px rgba(37,244,238,0.4));}
+.results-box .pct{font-size:24px;font-weight:900;color:var(--cyan);margin-top:10px;text-shadow:0 0 10px rgba(37,244,238,0.5);}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:14px;margin:22px 0;}
+.results-grid div{background:var(--bg3);border-radius:14px;padding:16px;border:1px solid var(--border);}
+.results-grid .n{font-size:28px;font-weight:900;color:var(--cyan);}
+.results-grid .l{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:6px;font-weight:700;}
+
+@media(max-width:700px){
+  nav{padding:12px 16px;}
+  .nav-links button{font-size:13px;gap:8px;}
+  main{padding:80px 12px 60px;}
+  .match-grid{grid-template-columns:1fr;}
+  h1{font-size:26px;}
+  .lesson-head h2{font-size:22px;}
+  .tf-row{flex-direction:column;align-items:flex-start;}
+  .tf-btns{width:100%;}
+  .tf-btn{flex:1;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">VOCABTOK</div>
+  <div class="nav-links">
+    <button id="nav-discover" class="active" onclick="showPage('discover')">Discover</button>
+    <button id="nav-practice" onclick="showPage('practice')">Practice</button>
+  </div>
+</nav>
+
+<main>
+  <!-- DISCOVER PAGE -->
+  <section class="page active" id="page-discover">
+    <h1>Discover</h1>
+    <p class="sub">Watch the short videos first, then complete the practice tasks.</p>
+    <div class="video-grid" id="videoGrid"></div>
+  </section>
+
+  <!-- PRACTICE PAGE -->
+  <section class="page" id="page-practice">
+    <button class="btn ghost sm" onclick="showPage('discover')" style="margin-bottom:20px;">← Back to Videos</button>
+    <div id="practiceContent"></div>
+  </section>
+</main>
+
+<!-- VIDEO PLAYER OVERLAY -->
+<div class="player-overlay" id="player-overlay">
+  <div class="player-shell">
+    <button class="close-player" onclick="closePlayer()">✕</button>
+    
+    <video id="videoPlayer" controls playsinline preload="metadata">
+      Your browser does not support the video tag.
+    </video>
+
+    <div class="after-video-overlay" id="afterVideo">
+      <div class="badge">Video Completed</div>
+      <h2>Great job!</h2>
+      <p style="color:var(--muted);font-size:15px;">You have finished this video. Now let's practice what you learned.</p>
+      <button class="btn pink" onclick="startPracticeFromVideo()" style="width:100%;">Start Practice</button>
+      <button class="btn ghost" onclick="closePlayer();" style="width:100%;">Watch Again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   VIDEO DATA & LESSON DATA
+   ============================================================ */
+const LESSONS = [
+  {
+    id:"everyday", title:"EVERYDAY SITUATIONS.MP4", displayTitle:"Everyday Situations", videoFile:"videos/EVERYDAY SITUATIONS.MP4", level:"A1–A2", focus:"Past Simple", emoji:"🚌",
+    vocab:["dropped","found","missed","burned","forgot","bought","passed","hurt","failed"],
+    activities:[
+      { type:"match", title:"1. Vocabulary Matching", instr:"Match each English word with its Kazakh meaning.",
+        pairs:[["dropped","Құлатып алды"],["found","Тауып алды"],["missed","Үлгермей қалды"],["burned","Күйдіріп алды"],["forgot","Ұмытып кетті"],["bought","Сатып алды"],["passed","Емтиханнан өтті"],["hurt","Ауыртып алды"],["failed","Сынақтан өте алмады"]] },
+      { type:"choice", title:"2. Choose the Correct Answer", instr:"Choose the best word to complete each sentence.",
+        questions:[
+          {q:"I ______ my phone on the floor.", options:["dropped","found","passed"], ans:0},
+          {q:"She ______ some money in the street.", options:["burned","found","missed"], ans:1},
+          {q:"He ______ the bus this morning.", options:["bought","passed","missed"], ans:2},
+          {q:"My mother ______ dinner yesterday.", options:["burned","found","hurt"], ans:0},
+          {q:"I ______ a new school bag last week.", options:["failed","bought","forgot"], ans:1}
+        ]},
+      { type:"fill", title:"3. Fill in the Gaps", instr:"Fill each gap with the correct word from the word bank.",
+        bank:["forgot","passed","hurt","failed","missed"],
+        questions:[
+          {text:"I ______ my keys at home.", ans:"forgot"},
+          {text:"She ______ the English test.", ans:"passed"},
+          {text:"He ______ his leg while playing football.", ans:"hurt"},
+          {text:"They ______ the bus.", ans:"missed"},
+          {text:"I studied hard, but I ______ the exam.", ans:"failed"}
+        ]},
+      { type:"tf", title:"4. True or False", instr:"Read each statement and choose True or False.",
+        questions:[
+          {stmt:"\"Dropped\" means you let something fall.", ans:true},
+          {stmt:"\"Found\" means you lost something.", ans:false},
+          {stmt:"\"Bought\" means you paid money for something.", ans:true},
+          {stmt:"\"Missed the bus\" means you arrived on time.", ans:false},
+          {stmt:"\"Passed the test\" means you were successful.", ans:true}
+        ]},
+      { type:"order", title:"5. Put the Words in Order", instr:"Click words to build a correct sentence.",
+        questions:[
+          {words:["phone","I","dropped","my"], ans:"I dropped my phone."},
+          {words:["money","found","she","some"], ans:"She found some money."},
+          {words:["bus","missed","we","the"], ans:"We missed the bus."},
+          {words:["test","passed","he","the"], ans:"He passed the test."},
+          {words:["keys","forgot","I","my"], ans:"I forgot my keys."}
+        ]},
+      { type:"choice", title:"6. Mini Quiz", instr:"Final quick review — choose the correct answer.",
+        questions:[
+          {q:"What is the past form of \"drop\"?", options:["dropped","droped","drops"], ans:0},
+          {q:"She ______ her homework at home.", options:["forgot","failed","passed"], ans:0},
+          {q:"He ______ his finger in the kitchen.", options:["hurt","bought","found"], ans:0},
+          {q:"We ______ the movie last night.", options:["missed","burned","passed"], ans:0},
+          {q:"They ______ a new house.", options:["bought","hurt","failed"], ans:0}
+        ]}
+    ]
+  },
+  {
+    id:"instructions", title:"Everyday Instructions.MP4", displayTitle:"Everyday Instructions", videoFile:"videos/Everyday Instructions.MP4", level:"A1–A2", focus:"Imperatives", emoji:"📋",
+    vocab:["be careful","finish your milk","wait for me","stay warm","wear your hat","hold my hand","put on your socks","feed the cat","show me your drawing","stay close"],
+    activities:[
+      { type:"match", title:"1. Vocabulary Matching", instr:"Match each instruction with its Kazakh meaning.",
+        pairs:[["be careful","Абай бол"],["finish your milk","Сүтті ішіп бітір"],["wait for me","Мені күт"],["stay warm","Жылы жүр"],["wear your hat","Бас киіміңді ки"],["hold my hand","Қолымнан ұста"],["put on your socks","Шұлығыңды ки"],["feed the cat","Мысықты тамақтандыр"],["show me your drawing","Маған суретіңді көрсет"],["stay close","Қасымда бол"]] },
+      { type:"choice", title:"2. Choose the Correct Answer", instr:"Choose the best answer.",
+        questions:[
+          {q:"You are going outside in cold weather. Your mother says:", options:["Stay warm!","Spill your coffee!","Miss the bus!"], ans:0},
+          {q:"You are crossing the road. Your father says:", options:["Be careful!","Feed the cat!","Finish your milk!"], ans:0},
+          {q:"Your little brother is walking near you. You say:", options:["Stay close to me!","Forget your password!","Build a shelf!"], ans:0},
+          {q:"Your cat is hungry. What should you do?", options:["Feed the cat.","Wear your hat.","Hold my hand."], ans:0},
+          {q:"You want someone to show you their picture. You say:", options:["Show me your drawing.","Stay warm.","Wait for me."], ans:0}
+        ]},
+      { type:"fill", title:"3. Fill in the Gaps", instr:"Complete each instruction with the correct word.",
+        bank:["careful","hand","socks","cat","wait"],
+        questions:[
+          {text:"Be ______ on the stairs.", ans:"careful"},
+          {text:"Hold my ______ when we cross the road.", ans:"hand"},
+          {text:"Put on your ______ before you go outside.", ans:"socks"},
+          {text:"Give the ______ some food.", ans:"cat"},
+          {text:"Please ______ for me at the door.", ans:"wait"}
+        ]},
+      { type:"tf", title:"4. True or False", instr:"Choose True or False for each statement.",
+        questions:[
+          {stmt:"\"Be careful\" is used to warn someone.", ans:true},
+          {stmt:"\"Feed the cat\" means give food to the cat.", ans:true},
+          {stmt:"\"Hold my hand\" means let go of my hand.", ans:false},
+          {stmt:"\"Wear your hat\" is an instruction.", ans:true},
+          {stmt:"\"Wait for me\" means go without me.", ans:false}
+        ]},
+      { type:"order", title:"5. Put the Words in Order", instr:"Click words to build a correct sentence.",
+        questions:[
+          {words:["careful","Be","stairs","the","on"], ans:"Be careful on the stairs."},
+          {words:["hand","Hold","my"], ans:"Hold my hand."},
+          {words:["cat","Feed","the"], ans:"Feed the cat."},
+          {words:["hat","Wear","your"], ans:"Wear your hat."},
+          {words:["me","Wait","for"], ans:"Wait for me."},
+          {words:["drawing","Show","your","me"], ans:"Show me your drawing."}
+        ]},
+      { type:"choice", title:"6. Mini Quiz", instr:"Final quick review.",
+        questions:[
+          {q:"Crossing the road: ______", options:["Be careful!","Feed the cat!","Show me your drawing!"], ans:0},
+          {q:"Cat is hungry: ______", options:["Feed the cat!","Wear your hat!","Wait for me!"], ans:0},
+          {q:"Cold outside: ______", options:["Stay warm!","Cut wood!","Spill coffee!"], ans:0},
+          {q:"Crossing a road with a child: ______", options:["Hold my hand!","Build a shelf!","Drill a hole!"], ans:0},
+          {q:"Before bed, drink milk: ______", options:["Finish your milk!","Miss the bus!","Lock yourself out!"], ans:0}
+        ]}
+    ]
+  },
+  {
+    id:"food", title:"Food and Diet.MP4", displayTitle:"Food and Diet", videoFile:"videos/Food and Diet.MP4", level:"A1–A2", focus:"Food Vocabulary", emoji:"🍲",
+    vocab:["snack","turkey","go on a diet","light on the stomach","heavy like a rock","a piece","take seriously","feel sick"],
+    activities:[
+      { type:"match", title:"1. Vocabulary Matching", instr:"Match each word with its Kazakh meaning.",
+        pairs:[["snack","Жеңіл тіскебасар"],["turkey","Күркетауық"],["go on a diet","Диета ұстау"],["light on the stomach","Асқазанға жеңіл"],["heavy like a rock","Ауыр, қорытылуы қиын"],["a piece","Бір бөлік"],["take seriously","Байыппен қабылдау"],["feel sick","Ауырып қалу"]] },
+      { type:"choice", title:"2. Choose the Correct Answer", instr:"Choose the best answer.",
+        questions:[
+          {q:"A small amount of food between meals is a ______.", options:["snack","prescription","tool"], ans:0},
+          {q:"If you want to eat healthier, you may ______.", options:["go on a diet","miss the bus","drill a hole"], ans:0},
+          {q:"Which food is usually described as \"light on the stomach\"?", options:["A very heavy meal","A light soup","A large fried meal"], ans:1},
+          {q:"\"Heavy like a rock\" means ______.", options:["very light","very heavy","very sweet"], ans:1},
+          {q:"If you eat too much, you may ______.", options:["feel sick","pass an exam","build a shelf"], ans:0}
+        ]},
+      { type:"fill", title:"3. Fill in the Gaps", instr:"Complete each sentence with the correct word.",
+        bank:["snack","diet","piece","sick","seriously"],
+        questions:[
+          {text:"I want a small ______ before dinner.", ans:"snack"},
+          {text:"My sister is going on a ______.", ans:"diet"},
+          {text:"Can I have a ______ of cake?", ans:"piece"},
+          {text:"I ate too much and now I feel ______.", ans:"sick"},
+          {text:"You should take your health ______.", ans:"seriously"}
+        ]},
+      { type:"tf", title:"4. True or False", instr:"Choose True or False for each statement.",
+        questions:[
+          {stmt:"A snack is usually a small amount of food.", ans:true},
+          {stmt:"\"Go on a diet\" means to change your eating habits.", ans:true},
+          {stmt:"\"A piece of cake\" means a whole cake.", ans:false},
+          {stmt:"\"Feel sick\" means to feel unwell.", ans:true},
+          {stmt:"\"Heavy like a rock\" describes something very light.", ans:false}
+        ]},
+      { type:"order", title:"5. Put the Words in Order", instr:"Click words to build a correct sentence.",
+        questions:[
+          {words:["snack","a","want","I"], ans:"I want a snack."},
+          {words:["diet","on","going","She","is","a"], ans:"She is going on a diet."},
+          {words:["cake","piece","a","of"], ans:"A piece of cake."},
+          {words:["sick","feel","I"], ans:"I feel sick."},
+          {words:["seriously","health","Take","your"], ans:"Take your health seriously."}
+        ]},
+      { type:"choice", title:"6. Mini Quiz", instr:"Final quick review.",
+        questions:[
+          {q:"A small amount of food between meals is a ______.", options:["snack","diet","turkey"], ans:0},
+          {q:"\"Go on a diet\" means ______.", options:["change what you eat","eat more sugar","skip all meals"], ans:0},
+          {q:"I ate too much cake and now I feel ______.", options:["sick","happy","strong"], ans:0},
+          {q:"\"A piece of cake\" means ______.", options:["a small part of a cake","a whole cake","no cake"], ans:0},
+          {q:"You should take your health ______.", options:["seriously","spilled","missed"], ans:0}
+        ]}
+    ]
+  },
+  {
+    id:"repairs", title:"HOME REPAIRS.MP4", displayTitle:"Home Repairs", videoFile:"videos/HOME REPAIRS.MP4", level:"A1–A2", focus:"Present Continuous", emoji:"🔨",
+    vocab:["hammer a nail","drill a hole","paint the fence","install a light fixture","cut wood","measure","carry tools","build a shelf","fix a broken door"],
+    activities:[
+      { type:"match", title:"1. Vocabulary Matching", instr:"Match each action with its Kazakh meaning.",
+        pairs:[["hammer a nail","Шегені балғамен қағу"],["drill a hole","Тесік бұрғылау"],["paint the fence","Қоршауды бояу"],["cut wood","Ағашты кесу"],["measure the window","Терезені өлшеу"],["carry tools","Құралдарды тасу"],["build a shelf","Сөре жасау"],["fix a broken door","Сынған есікті жөндеу"]] },
+      { type:"choice", title:"2. Choose the Correct Answer", instr:"Choose the best answer.",
+        questions:[
+          {q:"You use a hammer to ______.", options:["hammer a nail","paint a wall","measure a window"], ans:0},
+          {q:"You use a drill to ______.", options:["carry tools","drill a hole","cut paper"], ans:1},
+          {q:"What do you use to measure a window?", options:["A ruler or measuring tape","A hammer","A brush"], ans:0},
+          {q:"What do you do when a door is broken?", options:["Build a shelf","Fix the door","Paint the fence"], ans:1},
+          {q:"What do you use to paint a fence?", options:["A paintbrush","A drill","A hammer"], ans:0}
+        ]},
+      { type:"fill", title:"3. Fill in the Gaps", instr:"Complete each sentence with the correct -ing form.",
+        bank:["painting","drilling","cutting","measuring","carrying"],
+        questions:[
+          {text:"He is ______ a hole in the wall.", ans:"drilling"},
+          {text:"She is ______ the fence.", ans:"painting"},
+          {text:"They are ______ wood with a saw.", ans:"cutting"},
+          {text:"My father is ______ the window.", ans:"measuring"},
+          {text:"The workers are ______ tools.", ans:"carrying"}
+        ]},
+      { type:"tf", title:"4. True or False", instr:"Choose True or False for each statement.",
+        questions:[
+          {stmt:"A hammer is used to hit nails.", ans:true},
+          {stmt:"A drill is used to paint fences.", ans:false},
+          {stmt:"A saw is used to cut wood.", ans:true},
+          {stmt:"You can use a measuring tape to measure a window.", ans:true},
+          {stmt:"A shelf is used to keep things.", ans:true}
+        ]},
+      { type:"order", title:"5. Put the Words in Order", instr:"Click words to build a correct sentence.",
+        questions:[
+          {words:["hammering","is","He","a nail"], ans:"He is hammering a nail."},
+          {words:["fence","painting","She","is","the"], ans:"She is painting the fence."},
+          {words:["hole","drilling","They","are","a"], ans:"They are drilling a hole."},
+          {words:["wood","cutting","is","He"], ans:"He is cutting wood."},
+          {words:["shelf","building","We","are","a"], ans:"We are building a shelf."}
+        ]},
+      { type:"choice", title:"6. Mini Quiz", instr:"Final quick review.",
+        questions:[
+          {q:"He ______ a nail right now.", options:["is hammering","hammers","hammered"], ans:0},
+          {q:"They ______ a new shelf this week.", options:["are building","build","built"], ans:0},
+          {q:"What tool cuts wood?", options:["A saw","A hammer","A drill"], ans:0},
+          {q:"She ______ the fence at the moment.", options:["is painting","paints","painted"], ans:0},
+          {q:"A drill is used to ______.", options:["make holes","paint walls","measure rooms"], ans:0}
+        ]}
+    ]
+  },
+  {
+    id:"unexpected", title:"UNEXPECTED SITUATIONS.MP4", displayTitle:"Unexpected Situations", videoFile:"videos/UNEXPECTED SITUATIONS.MP4", level:"A1–A2", focus:"Past Simple", emoji:"😲",
+    vocab:["spilled","caught a cold","cut my finger","locked myself out","forgot my password","overslept","moved","received","changed","traveled"],
+    activities:[
+      { type:"match", title:"1. Vocabulary Matching", instr:"Match each expression with its Kazakh meaning.",
+        pairs:[["spilled my coffee","Кофемді төгіп алдым"],["caught a cold","Суық тиіп қалды"],["cut my finger","Саусағымды кесіп алдым"],["locked myself out","Үйге кіре алмай қалдым"],["forgot my password","Құпиясөзімді ұмыттым"],["overslept","Ұйықтап қалып қойдым"],["moved to a new house","Көшіп кетті"],["received good news","Жақсы жаңалық алдым"]] },
+      { type:"choice", title:"2. Choose the Correct Answer", instr:"Choose the best answer.",
+        questions:[
+          {q:"I dropped my cup and ______ my coffee.", options:["spilled","received","moved"], ans:0},
+          {q:"I was sick yesterday. I ______.", options:["overslept","caught a cold","changed my plan"], ans:1},
+          {q:"I couldn't open my account because I ______.", options:["forgot my password","traveled","spilled my coffee"], ans:0},
+          {q:"I woke up late and missed school. I ______.", options:["received good news","overslept","moved house"], ans:1},
+          {q:"We have a new home. We ______ last month.", options:["moved","cut","spilled"], ans:0}
+        ]},
+      { type:"fill", title:"3. Fill in the Gaps", instr:"Complete each sentence with the correct word.",
+        bank:["spilled","overslept","received","changed","traveled"],
+        questions:[
+          {text:"I ______ my coffee on the table.", ans:"spilled"},
+          {text:"She ______ to another city last week.", ans:"traveled"},
+          {text:"He ______ good news yesterday.", ans:"received"},
+          {text:"I ______ my plan because of the rain.", ans:"changed"},
+          {text:"We ______ and arrived late.", ans:"overslept"}
+        ]},
+      { type:"tf", title:"4. True or False", instr:"Choose True or False for each statement.",
+        questions:[
+          {stmt:"\"Overslept\" means you woke up too late.", ans:true},
+          {stmt:"\"Caught a cold\" means you became ill.", ans:true},
+          {stmt:"\"Spilled my coffee\" means I drank all my coffee.", ans:false},
+          {stmt:"\"Locked myself out\" means I could not get inside.", ans:true},
+          {stmt:"\"Received good news\" means you heard something positive.", ans:true}
+        ]},
+      { type:"order", title:"5. Put the Words in Order", instr:"Click words to build a correct sentence.",
+        questions:[
+          {words:["coffee","spilled","I","my"], ans:"I spilled my coffee."},
+          {words:["cold","caught","She","a"], ans:"She caught a cold."},
+          {words:["password","forgot","He","his"], ans:"He forgot his password."},
+          {words:["overslept","We","yesterday"], ans:"We overslept yesterday."},
+          {words:["news","received","good","They"], ans:"They received good news."}
+        ]},
+      { type:"choice", title:"6. Mini Quiz", instr:"Final quick review.",
+        questions:[
+          {q:"He ______ to Almaty last year.", options:["traveled","travel","traveling"], ans:0},
+          {q:"I ______ my keys and couldn't enter.", options:["locked myself out","received","moved"], ans:0},
+          {q:"She ______ a cold and stayed home.", options:["caught","cut","spilled"], ans:0},
+          {q:"They ______ to a new apartment.", options:["moved","overslept","received"], ans:0},
+          {q:"I ______ my plan at the last minute.", options:["changed","spilled","caught"], ans:0}
+        ]}
+    ]
+  },
+  {
+    id:"doctor", title:"Medicine.MP4", displayTitle:"Doctor and Patient", videoFile:"videos/Medicine.MP4", level:"A1–A2", focus:"Health Vocabulary", emoji:"👨‍⚕️",
+    vocab:["fever","weak","check your temperature","medicine","prescription","drink water","rest well","feel sick"],
+    activities:[
+      { type:"match", title:"1. Vocabulary Matching", instr:"Match each word with its Kazakh meaning.",
+        pairs:[["fever","Қызу"],["weak","Әлсіз"],["check your temperature","Дене қызуын тексеру"],["medicine","Дәрі"],["prescription","Дәрігердің рецепті"],["drink water","Су ішу"],["rest well","Демалу"],["feel sick","Өзіңді нашар сезіну"]] },
+      { type:"choice", title:"2. Choose the Correct Answer", instr:"Choose the best answer.",
+        questions:[
+          {q:"A person with a fever has ______.", options:["a high temperature","a new phone","a broken door"], ans:0},
+          {q:"What does a doctor use to check your temperature?", options:["A thermometer","A hammer","A ruler"], ans:0},
+          {q:"What does a doctor give you when you need medicine?", options:["A prescription","A ticket","A key"], ans:0},
+          {q:"If you feel weak, you should ______.", options:["run all day","rest","skip sleep"], ans:1},
+          {q:"What should you drink when you are ill?", options:["Water","Paint","Coffee only"], ans:0}
+        ]},
+      { type:"fill", title:"3. Fill in the Gaps", instr:"Complete the dialogue.",
+        bank:["fever","weak","temperature","medicine","rest"],
+        questions:[
+          {text:"Doctor: What brings you here today?", ans:""},
+          {text:"Patient: I have a ______ and I feel very ______.", ans:"fever", multi:["fever","weak"]},
+          {text:"Doctor: Let me check your ______.", ans:"temperature"},
+          {text:"Patient: Okay, doctor.", ans:""},
+          {text:"Doctor: You may need some ______. Please drink water and get enough ______.", ans:"medicine", multi:["medicine","rest"]}
+        ]},
+      { type:"tf", title:"4. True or False", instr:"Choose True or False for each statement.",
+        questions:[
+          {stmt:"A fever means your body temperature is high.", ans:true},
+          {stmt:"A prescription is a type of food.", ans:false},
+          {stmt:"A thermometer helps check your temperature.", ans:true},
+          {stmt:"Rest is important when you are ill.", ans:true},
+          {stmt:"\"I feel sick\" means \"I feel very happy.\"", ans:false}
+        ]},
+      { type:"order", title:"5. Put the Words in Order", instr:"Click words to build a correct sentence.",
+        questions:[
+          {words:["feel","I","weak"], ans:"I feel weak."},
+          {words:["temperature","your","Check"], ans:"Check your temperature."},
+          {words:["water","Drink","a lot of"], ans:"Drink a lot of water."},
+          {words:["medicine","Take","your"], ans:"Take your medicine."},
+          {words:["well","Rest"], ans:"Rest well."}
+        ]},
+      { type:"choice", title:"6. Mini Quiz", instr:"Final quick review.",
+        questions:[
+          {q:"She has a high temperature. She has a ______.", options:["fever","snack","drill"], ans:0},
+          {q:"You should ______ when you are ill.", options:["rest","run","paint"], ans:0},
+          {q:"A doctor writes a ______ for medicine.", options:["prescription","menu","ticket"], ans:0},
+          {q:"If you feel weak, you should ______.", options:["rest","run all day","lift weights"], ans:0},
+          {q:"What should you drink when ill?", options:["Water","Soda","Coffee only"], ans:0}
+        ]}
+    ]
+  }
+];
+
+/* Sort videos exactly by the order shown in the screenshot */
+const VIDEO_ORDER = ["everyday", "instructions", "food", "repairs", "unexpected", "doctor"];
+const SORTED_LESSONS = VIDEO_ORDER.map(id => LESSONS.find(l => l.id === id));
+
+/* ============================================================
+   STATE & NAVIGATION
+   ============================================================ */
+let currentLesson = null;
+let answers = {};
+let finished = false;
+let results = null;
+let pendingMatch = null;
+
+const store = {
+  get(k,d){ try{ return JSON.parse(localStorage.getItem(k)) ?? d }catch(e){ return d } },
+  set(k,v){ localStorage.setItem(k, JSON.stringify(v)) }
+};
+
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + pageId).classList.add('active');
+  
+  document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+  document.getElementById('nav-' + pageId).classList.add('active');
+
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ============================================================
+   DISCOVER RENDER
+   ============================================================ */
+function renderDiscover() {
+  const grid = document.getElementById('videoGrid');
+  grid.innerHTML = '';
+  SORTED_LESSONS.forEach(L => {
+    const card = document.createElement('div');
+    card.className = 'video-card';
+    card.innerHTML = `
+      <div class="video-thumb">
+        <img src="https://via.placeholder.com/400x600/111/333?text=${L.emoji}" alt="Video thumbnail">
+        <div class="play-btn">▶</div>
+      </div>
+      <div class="video-info">
+        <h3>${L.title}</h3>
+        <div class="video-meta">
+          <span class="tag pink">${L.level}</span>
+          <span class="tag">${L.focus}</span>
+        </div>
+        <button class="btn sm" onclick="playVideo('${L.id}')" style="margin-top:auto;">Watch Video</button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+/* ============================================================
+   VIDEO PLAYER
+   ============================================================ */
+function playVideo(id) {
+  const lesson = LESSONS.find(l => l.id === id);
+  if(!lesson) return;
+  
+  currentLesson = lesson;
+  
+  const player = document.getElementById('videoPlayer');
+  // Set video source
+  player.src = lesson.videoFile;
+  
+  // Reset after-video overlay
+  document.getElementById('afterVideo').classList.remove('open');
+  
+  // Show overlay
+  document.getElementById('player-overlay').classList.add('open');
+  
+  // Play video
+  player.play().catch(e => {
+    console.log("Autoplay blocked or file not found. User can press play.");
+  });
+}
+
+function closePlayer() {
+  const player = document.getElementById('videoPlayer');
+  player.pause();
+  player.currentTime = 0;
+  document.getElementById('player-overlay').classList.remove('open');
+}
+
+// Listen for video end
+document.getElementById('videoPlayer').addEventListener('ended', () => {
+  document.getElementById('afterVideo').classList.add('open');
+});
+
+function startPracticeFromVideo() {
+  closePlayer();
+  showPage('practice');
+  renderPractice(currentLesson.id);
+}
+
+/* ============================================================
+   PRACTICE RENDER
+   ============================================================ */
+function renderPractice(lessonId) {
+  const L = LESSONS.find(l => l.id === lessonId);
+  if(!L) return;
+  
+  currentLesson = L;
+  answers = {};
+  finished = false;
+  results = null;
+  pendingMatch = null;
+
+  const container = document.getElementById('practiceContent');
+  
+  // Build Lesson Header
+  let html = `
+    <div class="lesson-head">
+      <div class="lv-top">VIDEO PRACTICE</div>
+      <h2>${L.displayTitle}</h2>
+      <div class="meta">
+        <span class="chip">Level ${L.level}</span>
+        <span class="chip cyan">${L.focus}</span>
+        <span class="chip pink">6 activities</span>
+      </div>
+      <p style="color:var(--muted);font-size:14px;margin-top:14px;font-weight:600;">Main vocabulary:</p>
+      <div class="vocab-chips">${L.vocab.map(v=>`<span>${v}</span>`).join('')}</div>
+    </div>
+  `;
+
+  // Build Tasks
+  html += `<div id="tasksContainer">`;
+  L.activities.forEach((act, ai) => {
+    html += `
+      <div class="task" id="task-${ai}">
+        <div class="task-head">
+          <div class="task-title">${act.title}</div>
+          <div class="task-num">ACTIVITY ${ai+1}</div>
+        </div>
+        <div class="instr">${act.instr}</div>
+        <div class="task-body" id="body-${ai}"></div>
+      </div>
+    `;
+  });
+  html += `</div>`;
+
+  // Results Box & Actions
+  html += `
+    <div class="results-box" id="resultsBox"></div>
+    <div class="actions-bar">
+      <button class="btn ghost" onclick="showPage('discover')">← Back to Videos</button>
+      <button class="btn pink" onclick="tryAgain()">🔄 TRY AGAIN</button>
+      <button class="btn" id="finishBtn" onclick="finishLesson()">✅ FINISH</button>
+      <button class="btn ghost" id="seeResultsBtn" style="display:none;" onclick="scrollToResults()">📊 SEE RESULTS</button>
+    </div>
+  `;
+
+  container.innerHTML = html;
+
+  // Render each activity body
+  L.activities.forEach((act, ai) => {
+    const body = document.getElementById('body-' + ai);
+    if(act.type==='match') renderMatch(ai, act, body);
+    else if(act.type==='choice') renderChoice(ai, act, body);
+    else if(act.type==='fill') renderFill(ai, act, body);
+    else if(act.type==='tf') renderTF(ai, act, body);
+    else if(act.type==='order') renderOrder(ai, act, body);
+  });
+}
+
+/* ============================================================
+   ACTIVITY RENDERERS (Logic preserved)
+   ============================================================ */
+function renderMatch(ai, act, body){
+  const leftCol = document.createElement('div');
+  leftCol.style.display='flex'; leftCol.style.flexDirection='column'; leftCol.style.gap='8px';
+  const rightCol = document.createElement('div');
+  rightCol.style.display='flex'; rightCol.style.flexDirection='column'; rightCol.style.gap='8px';
+  const grid = document.createElement('div');
+  grid.className='match-grid';
+  grid.appendChild(leftCol); grid.appendChild(rightCol);
+
+  act.pairs.forEach((p,i)=>{
+    const div = document.createElement('div');
+    div.className='match-cell';
+    div.dataset.side='L'; div.dataset.pair=i; div.dataset.idx=ai+'_'+i;
+    div.innerHTML = `<span class="num">${i+1}</span><span class="lbl">${p[0]}</span>`;
+    div.onclick = ()=> selectMatch(ai, div, act);
+    leftCol.appendChild(div);
+  });
+
+  const shuffled = act.pairs.map((p,i)=>({text:p[1], pairIdx:i})).sort(()=>Math.random()-0.5);
+  shuffled.forEach((item,i)=>{
+    const div = document.createElement('div');
+    div.className='match-cell';
+    div.dataset.side='R'; div.dataset.pair=item.pairIdx; div.dataset.idx=ai+'_r_'+i;
+    div.innerHTML = `<span class="lbl">${item.text}</span>`;
+    div.onclick = ()=> selectMatch(ai, div, act);
+    rightCol.appendChild(div);
+  });
+
+  body.appendChild(grid);
+  act.pairs.forEach((p,i)=>{ if(answers[ai+'_'+i]===undefined) answers[ai+'_'+i]=''; });
+}
+
+function selectMatch(ai, el, act){
+  if(finished) return;
+  if(el.classList.contains('matched')){
+    const pairId = el.dataset.pair;
+    const container = el.closest('.match-grid');
+    container.querySelectorAll('.match-cell').forEach(c=>{
+      if(c.dataset.pair===pairId) c.classList.remove('matched');
+    });
+    answers[ai+'_'+pairId]='';
+    return;
+  }
+  if(!pendingMatch){ pendingMatch = el; el.classList.add('selected'); return; }
+  if(pendingMatch === el){ pendingMatch.classList.remove('selected'); pendingMatch=null; return; }
+  if(pendingMatch.dataset.side === el.dataset.side){
+    pendingMatch.classList.remove('selected');
+    pendingMatch = el; el.classList.add('selected');
+    return;
+  }
+  const left = pendingMatch.dataset.side==='L' ? pendingMatch : el;
+  const right = pendingMatch.dataset.side==='R' ? pendingMatch : el;
+  pendingMatch.classList.remove('selected');
+  pendingMatch = null;
+  answers[ai+'_'+left.dataset.pair] = right.dataset.pair;
+  left.classList.add('matched');
+  right.classList.add('matched');
+}
+
+function renderChoice(ai, act, body){
+  act.questions.forEach((q, qi)=>{
+    const key = ai+'_'+qi;
+    const wrap = document.createElement('div');
+    wrap.className='question';
+    const letters = ['A','B','C','D'];
+    wrap.innerHTML = `<div class="q-text">${qi+1}. ${q.q}</div>
+      <div class="options">${q.options.map((o,oi)=>
+        `<div class="option" data-opt="${oi}"><span class="dot"></span><span>${letters[oi]}. ${o}</span></div>`).join('')}</div>`;
+    wrap.querySelectorAll('.option').forEach(opt=>{
+      opt.onclick = ()=>{
+        if(finished) return;
+        wrap.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));
+        opt.classList.add('selected');
+        answers[key] = parseInt(opt.dataset.opt);
+      };
+    });
+    body.appendChild(wrap);
+    if(answers[key]===undefined) answers[key]=null;
+  });
+}
+
+function renderFill(ai, act, body){
+  const bank = document.createElement('div');
+  bank.className='word-bank';
+  bank.innerHTML = act.bank.map(w=>`<span>${w}</span>`).join('');
+  body.appendChild(bank);
+
+  act.questions.forEach((q, qi)=>{
+    const key = ai+'_'+qi;
+    const line = document.createElement('div');
+    line.className='fill-line';
+
+    if(q.multi){
+      let html = '';
+      const parts = q.text.split('______');
+      parts.forEach((part, pi)=>{
+        html += `<span>${part}</span>`;
+        if(pi < parts.length-1) html += `<input data-blank="${pi}" placeholder="...">`;
+      });
+      line.innerHTML = html;
+      body.appendChild(line);
+      if(!Array.isArray(answers[key])) answers[key] = q.multi.map(()=>'');
+      line.querySelectorAll('input').forEach((inp,bi)=>{
+        inp.oninput = ()=>{ if(!finished) answers[key][bi] = inp.value.trim().toLowerCase(); };
+      });
+    } else if(!q.ans){
+      line.innerHTML = `<span style="color:var(--muted);font-style:italic;">${q.text}</span>`;
+      body.appendChild(line);
+    } else {
+      const parts = q.text.split('______');
+      line.innerHTML = `<span>${qi+1}.</span><span>${parts[0]}</span><input placeholder="..."><span>${parts[1]||''}</span><span class="fix-show"></span>`;
+      body.appendChild(line);
+      const inp = line.querySelector('input');
+      if(answers[key]) inp.value = answers[key];
+      inp.oninput = ()=>{ if(!finished) answers[key] = inp.value.trim().toLowerCase(); };
+    }
+  });
+}
+
+function renderTF(ai, act, body){
+  act.questions.forEach((q, qi)=>{
+    const key = ai+'_'+qi;
+    const row = document.createElement('div');
+    row.className='tf-row';
+    row.innerHTML = `<div class="stmt">${qi+1}. ${q.stmt}</div>
+      <div class="tf-btns">
+        <button class="tf-btn" data-val="true">TRUE</button>
+        <button class="tf-btn" data-val="false">FALSE</button>
+      </div>`;
+    row.querySelectorAll('.tf-btn').forEach(btn=>{
+      btn.onclick = ()=>{
+        if(finished) return;
+        row.querySelectorAll('.tf-btn').forEach(b=>{ b.classList.remove('sel-true','sel-false'); });
+        btn.classList.add(btn.dataset.val==='true' ? 'sel-true' : 'sel-false');
+        answers[key] = btn.dataset.val==='true';
+      };
+    });
+    body.appendChild(row);
+    if(answers[key]===undefined) answers[key]=null;
+  });
+}
+
+function renderOrder(ai, act, body){
+  act.questions.forEach((q, qi)=>{
+    const key = ai+'_'+qi;
+    const wrap = document.createElement('div');
+    wrap.className='order-question';
+    const shuffled = [...q.words].sort(()=>Math.random()-0.5);
+    wrap.innerHTML = `<div class="num-lbl">${qi+1}. Build the sentence:</div>
+      <div class="order-words">${shuffled.map((w,i)=>`<span class="order-word" data-word="${w}">${w}</span>`).join('')}</div>
+      <div class="order-answer"><span class="ph">Click words above to build the sentence</span></div>
+      <div class="order-feedback"></div>`;
+    body.appendChild(wrap);
+    if(!Array.isArray(answers[key])) answers[key]=[];
+    
+    wrap.querySelectorAll('.order-word').forEach(chip=>{
+      chip.onclick = ()=>{
+        if(finished || chip.classList.contains('used')) return;
+        chip.classList.add('used');
+        answers[key].push(chip.dataset.word);
+        renderOrderAnswer(key, wrap);
+      };
+    });
+  });
+}
+
+function renderOrderAnswer(key, wrap){
+  const answerBox = wrap.querySelector('.order-answer');
+  answerBox.innerHTML = '';
+  const words = answers[key];
+  if(words.length===0){
+    answerBox.innerHTML = `<span class="ph">Click words above to build the sentence</span>`;
+    return;
+  }
+  words.forEach((w, i)=>{
+    const chip = document.createElement('span');
+    chip.className='placed';
+    chip.textContent = w;
+    chip.onclick = ()=>{
+      if(finished) return;
+      words.splice(i,1);
+      wrap.querySelectorAll('.order-word').forEach(c=>{
+        if(words.includes(c.dataset.word)) c.classList.add('used');
+        else c.classList.remove('used');
+      });
+      renderOrderAnswer(key, wrap);
+    };
+    answerBox.appendChild(chip);
+  });
+}
+
+/* ============================================================
+   FINISH & RESULTS
+   ============================================================ */
+function countUnanswered(){
+  let n=0;
+  currentLesson.activities.forEach((act, ai)=>{
+    if(act.type==='match') act.pairs.forEach((p,i)=>{ if(!answers[ai+'_'+i]) n++; });
+    else if(act.type==='choice') act.questions.forEach((q,qi)=>{ if(answers[ai+'_'+qi]===null || answers[ai+'_'+qi]===undefined) n++; });
+    else if(act.type==='fill') act.questions.forEach((q,qi)=>{
+      if(q.multi){ const arr = answers[ai+'_'+qi] || []; q.multi.forEach((_,bi)=>{ if(!arr[bi]) n++; }); }
+      else if(q.ans){ if(!answers[ai+'_'+qi]) n++; }
+    });
+    else if(act.type==='tf') act.questions.forEach((q,qi)=>{ if(answers[ai+'_'+qi]===null || answers[ai+'_'+qi]===undefined) n++; });
+    else if(act.type==='order') act.questions.forEach((q,qi)=>{ if(!answers[ai+'_'+qi] || answers[ai+'_'+qi].length===0) n++; });
+  });
+  return n;
+}
+
+function finishLesson(){
+  const unanswered = countUnanswered();
+  if(unanswered > 0){
+    if(!confirm(`You have ${unanswered} unanswered question(s).\nPress OK to finish anyway, or Cancel to go back.`)) return;
+  }
+  finished = true;
+  let total = 0, correct = 0, incorrect = 0;
+  const details = [];
+
+  currentLesson.activities.forEach((act, ai)=>{
+    const body = document.getElementById('body-'+ai);
+
+    if(act.type==='match'){
+      body.querySelectorAll('.match-cell[data-side="L"]').forEach(cell=>{
+        total++;
+        const chosen = answers[ai+'_'+cell.dataset.pair];
+        if(String(chosen)===String(cell.dataset.pair)){
+          correct++; cell.classList.add('finished-ok');
+        } else {
+          incorrect++; cell.classList.add('finished-bad');
+          body.querySelectorAll('.match-cell[data-side="R"]').forEach(r=>{
+            if(r.dataset.pair===chosen) r.classList.add('finished-bad');
+            if(r.dataset.pair===cell.dataset.pair) r.classList.add('finished-ok');
+          });
+          details.push({task:act.title, q:`"${cell.querySelector('.lbl').textContent}" → correct: ${act.pairs[cell.dataset.pair][1]}`});
+        }
+      });
+    }
+    else if(act.type==='choice'){
+      body.querySelectorAll('.question').forEach((qEl, qi)=>{
+        total++;
+        const chosen = answers[ai+'_'+qi];
+        const correctIdx = act.questions[qi].ans;
+        qEl.querySelectorAll('.option').forEach((o, oi)=>{
+          o.style.pointerEvents='none';
+          if(oi===correctIdx) o.classList.add('correct');
+          if(chosen!==null && oi===chosen && chosen!==correctIdx) o.classList.add('wrong');
+        });
+        if(chosen===correctIdx) correct++;
+        else { incorrect++; details.push({task:act.title, q:`Q${qi+1}. ${act.questions[qi].q} — correct: ${act.questions[qi].options[correctIdx]}`}); }
+      });
+    }
+    else if(act.type==='fill'){
+      body.querySelectorAll('.fill-line').forEach((line, li)=>{
+        const q = act.questions[li];
+        if(q.multi){
+          total += q.multi.length;
+          const inputs = line.querySelectorAll('input');
+          inputs.forEach((inp, bi)=>{
+            const userAns = (answers[ai+'_'+li] && answers[ai+'_'+li][bi] || '').toLowerCase().trim();
+            const correctAns = q.multi[bi].toLowerCase().trim();
+            inp.disabled = true;
+            if(userAns===correctAns){ correct++; inp.classList.add('correct'); }
+            else { incorrect++; inp.classList.add('wrong');
+              const show = document.createElement('span'); show.className='fix-show'; show.textContent = ' → '+correctAns;
+              inp.after(show);
+              details.push({task:act.title, q:`${q.text} — blank ${bi+1} correct: ${correctAns}`});
+            }
+          });
+        } else if(q.ans){
+          total++;
+          const userAns = (answers[ai+'_'+li] || '').toLowerCase().trim();
+          const correctAns = q.ans.toLowerCase().trim();
+          const inp = line.querySelector('input');
+          const show = line.querySelector('.fix-show');
+          inp.disabled = true;
+          if(userAns===correctAns){ correct++; inp.classList.add('correct'); }
+          else { incorrect++; inp.classList.add('wrong'); show.textContent = '→ '+correctAns;
+            details.push({task:act.title, q:`${q.text.replace('______','___')} — correct: ${correctAns}`});
+          }
+        }
+      });
+    }
+    else if(act.type==='tf'){
+      body.querySelectorAll('.tf-row').forEach((row, qi)=>{
+        total++;
+        const chosen = answers[ai+'_'+qi];
+        const correctVal = act.questions[qi].ans;
+        row.querySelectorAll('.tf-btn').forEach(btn=>{
+          btn.style.pointerEvents='none';
+          const val = btn.dataset.val==='true';
+          if(val===correctVal) btn.classList.add('reveal-correct');
+          if(chosen!==null && val===chosen && chosen!==correctVal) btn.classList.add('reveal-wrong');
+        });
+        if(chosen===correctVal) correct++;
+        else { incorrect++; details.push({task:act.title, q:`${act.questions[qi].stmt} — correct: ${correctVal?'TRUE':'FALSE'}`}); }
+      });
+    }
+    else if(act.type==='order'){
+      body.querySelectorAll('.order-question').forEach((wrap, qi)=>{
+        total++;
+        const userSent = (answers[ai+'_'+qi]||[]).join(' ');
+        const correctSent = act.questions[qi].ans;
+        const fb = wrap.querySelector('.order-feedback');
+        const norm = s => s.toLowerCase().replace(/[.,!?]/g,'').replace(/\s+/g,' ').trim();
+        if(norm(userSent)===norm(correctSent)){
+          correct++; fb.className='order-feedback ok'; fb.textContent = '✓ Correct: '+correctSent;
+        } else {
+          incorrect++; fb.className='order-feedback bad';
+          fb.textContent = '✕ Your answer: '+ (userSent||'(empty)') +' — Correct: '+correctSent;
+          details.push({task:act.title, q:`Sentence ${qi+1} — correct: ${correctSent}`});
+        }
+        wrap.querySelectorAll('.order-word, .placed').forEach(c=>c.style.pointerEvents='none');
+      });
+    }
+  });
+
+  const percent = total>0 ? Math.round(correct/total*100) : 0;
+  results = {total, correct, incorrect, percent, details};
+
+  const saved = store.get('vocabtok_practice', {});
+  saved[currentLesson.id] = {total, correct, incorrect, percent, date: new Date().toISOString()};
+  store.set('vocabtok_practice', saved);
+
+  document.getElementById('finishBtn').style.display='none';
+  document.getElementById('seeResultsBtn').style.display='inline-flex';
+  showResultsBox();
+  window.scrollTo({top: document.getElementById('resultsBox').offsetTop - 40, behavior:'smooth'});
+}
+
+function showResultsBox(){
+  const box = document.getElementById('resultsBox');
+  box.innerHTML = `
+    <div style="font-size:15px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;font-weight:900;margin-bottom:12px;">Lesson Result</div>
+    <div class="score-big">${results.correct}/${results.total}</div>
+    <div class="pct">${results.percent}%</div>
+    <div class="results-grid">
+      <div><div class="n">${results.total}</div><div class="l">Total</div></div>
+      <div><div class="n" style="color:var(--ok)">${results.correct}</div><div class="l">Correct</div></div>
+      <div><div class="n" style="color:var(--err)">${results.incorrect}</div><div class="l">Incorrect</div></div>
+    </div>
+    ${results.details.length ? `
+      <div style="text-align:left;margin-top:20px;">
+        <div style="font-size:14px;font-weight:900;color:var(--muted);text-transform:uppercase;margin-bottom:10px;letter-spacing:1px;">Review these mistakes:</div>
+        <div style="max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;">
+          ${results.details.slice(0,50).map(d=>`
+            <div style="background:var(--bg3);border-radius:10px;padding:12px 16px;font-size:14px;border:1px solid var(--border);">
+              <div style="color:var(--pink);font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">${d.task}</div>
+              <div style="color:var(--text);margin-top:4px;">${d.q}</div>
+            </div>`).join('')}
+        </div>
+      </div>` : `<div style="margin-top:20px;background:rgba(0,230,118,0.15);color:var(--ok);padding:16px;border-radius:12px;font-weight:800;border:1px solid rgba(0,230,118,0.3);">🎉 Perfect! No mistakes.</div>`}
+    <button class="btn" style="margin-top:24px;width:100%;" onclick="showPage('discover')">Choose another lesson</button>
+  `;
+  box.classList.add('show');
+}
+
+function scrollToResults(){
+  document.getElementById('resultsBox').scrollIntoView({behavior:'smooth'});
+}
+
+function tryAgain(){
+  renderPractice(currentLesson.id);
+}
+
+/* INIT */
+renderDiscover();
+</script>
+</body>
+</html>
