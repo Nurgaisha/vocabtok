@@ -6,16 +6,10 @@
 <title>VOCABTOK — Learn English</title>
 <style>
 :root{
-  --bg:#000000;
-  --bg2:#121212;
-  --bg3:#1f1f1f;
-  --cyan:#25F4EE;
-  --pink:#FE2C55;
-  --text:#FFFFFF;
-  --muted:#8A8B91;
-  --ok:#00E676;
-  --err:#FF3B30;
-  --border:#2a2a2a;
+  --bg:#000000; --bg2:#121212; --bg3:#1f1f1f;
+  --cyan:#25F4EE; --pink:#FE2C55;
+  --text:#FFFFFF; --muted:#8A8B91;
+  --ok:#00E676; --err:#FF3B30; --border:#2a2a2a;
 }
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,sans-serif;}
 body{background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
@@ -31,20 +25,15 @@ nav{position:fixed;top:0;left:0;right:0;background:rgba(0,0,0,0.85);backdrop-fil
 .nav-links button{font-size:15px;font-weight:700;color:var(--muted);transition:.2s;}
 .nav-links button:hover,.nav-links button.active{color:var(--cyan);text-shadow:0 0 10px rgba(37,244,238,0.5);}
 
-/* MAIN CONTAINER */
 main{max-width:1000px;margin:0 auto;padding:90px 20px 80px;}
-
-/* PAGE CONTAINER */
 .page{display:none;animation:fadeIn .3s;}
 .page.active{display:block;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
-/* TYPOGRAPHY */
 h1{font-size:32px;font-weight:900;margin-bottom:8px;letter-spacing:-0.5px;text-shadow:0 0 15px rgba(37,244,238,0.4);}
 h2{font-size:22px;font-weight:800;margin:0 0 12px;}
 .sub{color:var(--muted);font-size:15px;margin-bottom:24px;}
 
-/* BUTTONS */
 .btn{background:var(--cyan);color:#000;padding:12px 24px;border-radius:12px;font-weight:900;font-size:15px;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 0 15px rgba(37,244,238,0.3);}
 .btn:hover{filter:brightness(1.1);transform:translateY(-2px);box-shadow:0 0 25px rgba(37,244,238,0.5);}
 .btn.pink{background:var(--pink);color:#fff;box-shadow:0 0 15px rgba(254,44,85,0.3);}
@@ -54,12 +43,12 @@ h2{font-size:22px;font-weight:800;margin:0 0 12px;}
 .btn.sm{padding:8px 16px;font-size:14px;border-radius:10px;}
 .btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
 
-/* DISCOVER - VIDEO CARDS */
+/* DISCOVER */
 .video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;}
 .video-card{background:var(--bg2);border-radius:20px;overflow:hidden;border:1px solid var(--border);transition:all .25s;display:flex;flex-direction:column;}
 .video-card:hover{border-color:var(--cyan);transform:translateY(-4px);box-shadow:0 8px 30px rgba(37,244,238,0.15);}
 .video-thumb{aspect-ratio:9/13;background:#111;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
-.video-thumb img{width:100%;height:100%;object-fit:cover;opacity:0.8;}
+.video-thumb .emoji-bg{font-size:80px;opacity:0.8;}
 .video-thumb .play-btn{position:absolute;width:64px;height:64px;border-radius:50%;background:rgba(0,0,0,0.6);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--cyan);backdrop-filter:blur(5px);transition:.2s;}
 .video-card:hover .play-btn{transform:scale(1.1);box-shadow:0 0 20px rgba(37,244,238,0.6);background:rgba(37,244,238,0.2);}
 .video-info{padding:16px;flex:1;display:flex;flex-direction:column;}
@@ -68,19 +57,25 @@ h2{font-size:22px;font-weight:800;margin:0 0 12px;}
 .tag{display:inline-block;font-size:11px;font-weight:800;padding:4px 10px;border-radius:20px;background:rgba(37,244,238,0.15);color:var(--cyan);border:1px solid rgba(37,244,238,0.3);}
 .tag.pink{background:rgba(254,44,85,0.15);color:var(--pink);border-color:rgba(254,44,85,0.3);}
 
-/* VIDEO PLAYER OVERLAY */
+/* PLAYER OVERLAY */
 .player-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px);}
 .player-overlay.open{display:flex;}
-.player-shell{position:relative;width:100%;max-width:420px;aspect-ratio:9/16;background:#000;border-radius:20px;overflow:hidden;box-shadow:0 0 60px rgba(37,244,238,0.2);border:1px solid #333;}
-.player-shell video{width:100%;height:100%;object-fit:cover;background:#000;}
+.player-shell{position:relative;width:100%;max-width:420px;aspect-ratio:9/16;background:#000;border-radius:20px;overflow:hidden;box-shadow:0 0 60px rgba(37,244,238,0.2);border:1px solid #333; display:flex; flex-direction:column;}
+.video-wrapper {flex:1; position:relative; display:flex; align-items:center; justify-content:center; background:#000;}
+.player-shell video{width:100%;height:100%;object-fit:contain;background:#000;}
 .close-player{position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;font-size:20px;z-index:10;color:#fff;transition:.2s;border:1px solid rgba(255,255,255,0.2);}
 .close-player:hover{background:var(--pink);}
+
 .after-video-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.9);display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:30px;text-align:center;z-index:9;backdrop-filter:blur(10px);}
 .after-video-overlay.open{display:flex;}
 .after-video-overlay h2{color:var(--cyan);font-size:24px;font-weight:900;text-shadow:0 0 15px rgba(37,244,238,0.5);}
 .after-video-overlay .badge{background:rgba(0,230,118,0.2);color:var(--ok);padding:6px 16px;border-radius:20px;font-weight:800;font-size:13px;border:1px solid rgba(0,230,118,0.4);margin-bottom:10px;}
 
-/* PRACTICE SECTION */
+/* PRACTICE SELECTOR & SECTION */
+.practice-selector {display:flex; gap:10px; overflow-x:auto; padding-bottom:16px; margin-bottom:24px; border-bottom:1px solid var(--border);}
+.practice-selector button {padding:8px 16px; border-radius:12px; background:var(--bg2); border:1px solid var(--border); font-size:14px; font-weight:700; color:var(--muted); white-space:nowrap;}
+.practice-selector button.active {background:rgba(37,244,238,0.1); color:var(--cyan); border-color:var(--cyan);}
+
 .lesson-head{background:linear-gradient(135deg,rgba(37,244,238,0.1),rgba(254,44,85,0.1)),var(--bg2);border-radius:22px;padding:26px;margin-bottom:24px;border:1px solid var(--border);}
 .lesson-head .lv-top{font-size:13px;font-weight:900;color:var(--cyan);text-transform:uppercase;letter-spacing:1.5px;text-shadow:0 0 10px rgba(37,244,238,0.4);}
 .lesson-head h2{font-size:28px;margin:8px 0;color:#fff;}
@@ -192,16 +187,17 @@ h2{font-size:22px;font-weight:800;margin:0 0 12px;}
 </nav>
 
 <main>
-  <!-- DISCOVER PAGE -->
   <section class="page active" id="page-discover">
     <h1>Discover</h1>
     <p class="sub">Watch the short videos first, then complete the practice tasks.</p>
     <div class="video-grid" id="videoGrid"></div>
   </section>
 
-  <!-- PRACTICE PAGE -->
   <section class="page" id="page-practice">
-    <button class="btn ghost sm" onclick="showPage('discover')" style="margin-bottom:20px;">← Back to Videos</button>
+    <h1>Practice</h1>
+    <p class="sub">Select a lesson below to test your knowledge.</p>
+    
+    <div class="practice-selector" id="practiceSelector"></div>
     <div id="practiceContent"></div>
   </section>
 </main>
@@ -211,27 +207,30 @@ h2{font-size:22px;font-weight:800;margin:0 0 12px;}
   <div class="player-shell">
     <button class="close-player" onclick="closePlayer()">✕</button>
     
-    <video id="videoPlayer" controls playsinline preload="metadata">
-      Your browser does not support the video tag.
-    </video>
+    <div class="video-wrapper">
+      <video id="videoPlayer" controls playsinline preload="auto">
+        Your browser does not support the video tag.
+      </video>
+    </div>
 
     <div class="after-video-overlay" id="afterVideo">
       <div class="badge">Video Completed</div>
       <h2>Great job!</h2>
       <p style="color:var(--muted);font-size:15px;">You have finished this video. Now let's practice what you learned.</p>
       <button class="btn pink" onclick="startPracticeFromVideo()" style="width:100%;">Start Practice</button>
-      <button class="btn ghost" onclick="closePlayer();" style="width:100%;">Watch Again</button>
+      <button class="btn ghost" onclick="replayVideo()" style="width:100%;">Watch Again</button>
     </div>
   </div>
 </div>
 
 <script>
-/* ============================================================
-   VIDEO DATA & LESSON DATA
-   ============================================================ */
+const VIDEO_BASE_PATH = "videos/"; 
+
 const LESSONS = [
   {
-    id:"everyday", title:"EVERYDAY SITUATIONS.MP4", displayTitle:"Everyday Situations", videoFile:"videos/EVERYDAY SITUATIONS.MP4", level:"A1–A2", focus:"Past Simple", emoji:"🚌",
+    id:"everyday", title:"EVERYDAY SITUATIONS.MP4", displayTitle:"Everyday Situations", 
+    videoFile: VIDEO_BASE_PATH + "EVERYDAY SITUATIONS.MP4", 
+    level:"A1–A2", focus:"Past Simple", emoji:"🚌",
     vocab:["dropped","found","missed","burned","forgot","bought","passed","hurt","failed"],
     activities:[
       { type:"match", title:"1. Vocabulary Matching", instr:"Match each English word with its Kazakh meaning.",
@@ -280,7 +279,9 @@ const LESSONS = [
     ]
   },
   {
-    id:"instructions", title:"Everyday Instructions.MP4", displayTitle:"Everyday Instructions", videoFile:"videos/Everyday Instructions.MP4", level:"A1–A2", focus:"Imperatives", emoji:"📋",
+    id:"instructions", title:"Everyday Instructions.MP4", displayTitle:"Everyday Instructions", 
+    videoFile: VIDEO_BASE_PATH + "Everyday Instructions.MP4", 
+    level:"A1–A2", focus:"Imperatives", emoji:"📋",
     vocab:["be careful","finish your milk","wait for me","stay warm","wear your hat","hold my hand","put on your socks","feed the cat","show me your drawing","stay close"],
     activities:[
       { type:"match", title:"1. Vocabulary Matching", instr:"Match each instruction with its Kazakh meaning.",
@@ -330,7 +331,9 @@ const LESSONS = [
     ]
   },
   {
-    id:"food", title:"Food and Diet.MP4", displayTitle:"Food and Diet", videoFile:"videos/Food and Diet.MP4", level:"A1–A2", focus:"Food Vocabulary", emoji:"🍲",
+    id:"food", title:"Food and Diet.MP4", displayTitle:"Food and Diet", 
+    videoFile: VIDEO_BASE_PATH + "Food and Diet.MP4", 
+    level:"A1–A2", focus:"Food Vocabulary", emoji:"🍲",
     vocab:["snack","turkey","go on a diet","light on the stomach","heavy like a rock","a piece","take seriously","feel sick"],
     activities:[
       { type:"match", title:"1. Vocabulary Matching", instr:"Match each word with its Kazakh meaning.",
@@ -379,7 +382,9 @@ const LESSONS = [
     ]
   },
   {
-    id:"repairs", title:"HOME REPAIRS.MP4", displayTitle:"Home Repairs", videoFile:"videos/HOME REPAIRS.MP4", level:"A1–A2", focus:"Present Continuous", emoji:"🔨",
+    id:"repairs", title:"HOME REPAIRS.MP4", displayTitle:"Home Repairs", 
+    videoFile: VIDEO_BASE_PATH + "HOME REPAIRS.MP4", 
+    level:"A1–A2", focus:"Present Continuous", emoji:"🔨",
     vocab:["hammer a nail","drill a hole","paint the fence","install a light fixture","cut wood","measure","carry tools","build a shelf","fix a broken door"],
     activities:[
       { type:"match", title:"1. Vocabulary Matching", instr:"Match each action with its Kazakh meaning.",
@@ -428,7 +433,9 @@ const LESSONS = [
     ]
   },
   {
-    id:"unexpected", title:"UNEXPECTED SITUATIONS.MP4", displayTitle:"Unexpected Situations", videoFile:"videos/UNEXPECTED SITUATIONS.MP4", level:"A1–A2", focus:"Past Simple", emoji:"😲",
+    id:"unexpected", title:"UNEXPECTED SITUATIONS.MP4", displayTitle:"Unexpected Situations", 
+    videoFile: VIDEO_BASE_PATH + "UNEXPECTED SITUATIONS.MP4", 
+    level:"A1–A2", focus:"Past Simple", emoji:"😲",
     vocab:["spilled","caught a cold","cut my finger","locked myself out","forgot my password","overslept","moved","received","changed","traveled"],
     activities:[
       { type:"match", title:"1. Vocabulary Matching", instr:"Match each expression with its Kazakh meaning.",
@@ -477,7 +484,9 @@ const LESSONS = [
     ]
   },
   {
-    id:"doctor", title:"Medicine.MP4", displayTitle:"Doctor and Patient", videoFile:"videos/Medicine.MP4", level:"A1–A2", focus:"Health Vocabulary", emoji:"👨‍⚕️",
+    id:"doctor", title:"Medicine.MP4", displayTitle:"Doctor and Patient", 
+    videoFile: VIDEO_BASE_PATH + "Medicine.MP4", 
+    level:"A1–A2", focus:"Health Vocabulary", emoji:"👨‍⚕️",
     vocab:["fever","weak","check your temperature","medicine","prescription","drink water","rest well","feel sick"],
     activities:[
       { type:"match", title:"1. Vocabulary Matching", instr:"Match each word with its Kazakh meaning.",
@@ -527,13 +536,9 @@ const LESSONS = [
   }
 ];
 
-/* Sort videos exactly by the order shown in the screenshot */
 const VIDEO_ORDER = ["everyday", "instructions", "food", "repairs", "unexpected", "doctor"];
 const SORTED_LESSONS = VIDEO_ORDER.map(id => LESSONS.find(l => l.id === id));
 
-/* ============================================================
-   STATE & NAVIGATION
-   ============================================================ */
 let currentLesson = null;
 let answers = {};
 let finished = false;
@@ -548,16 +553,17 @@ const store = {
 function showPage(pageId) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + pageId).classList.add('active');
-  
   document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
   document.getElementById('nav-' + pageId).classList.add('active');
-
   window.scrollTo({top:0,behavior:'smooth'});
+
+  if(pageId === 'practice' && !currentLesson) {
+    // If no lesson selected yet, show the first one
+    renderPracticeSelector();
+    renderPractice(SORTED_LESSONS[0].id);
+  }
 }
 
-/* ============================================================
-   DISCOVER RENDER
-   ============================================================ */
 function renderDiscover() {
   const grid = document.getElementById('videoGrid');
   grid.innerHTML = '';
@@ -566,7 +572,7 @@ function renderDiscover() {
     card.className = 'video-card';
     card.innerHTML = `
       <div class="video-thumb">
-        <img src="https://via.placeholder.com/400x600/111/333?text=${L.emoji}" alt="Video thumbnail">
+        <div class="emoji-bg">${L.emoji}</div>
         <div class="play-btn">▶</div>
       </div>
       <div class="video-info">
@@ -582,29 +588,24 @@ function renderDiscover() {
   });
 }
 
-/* ============================================================
-   VIDEO PLAYER
-   ============================================================ */
 function playVideo(id) {
   const lesson = LESSONS.find(l => l.id === id);
   if(!lesson) return;
   
   currentLesson = lesson;
-  
   const player = document.getElementById('videoPlayer');
-  // Set video source
   player.src = lesson.videoFile;
+  player.load(); 
   
-  // Reset after-video overlay
   document.getElementById('afterVideo').classList.remove('open');
-  
-  // Show overlay
   document.getElementById('player-overlay').classList.add('open');
   
-  // Play video
-  player.play().catch(e => {
-    console.log("Autoplay blocked or file not found. User can press play.");
-  });
+  let playPromise = player.play();
+  if (playPromise !== undefined) {
+    playPromise.catch(error => {
+      console.log("Автоойнатуға рұқсат жоқ.");
+    });
+  }
 }
 
 function closePlayer() {
@@ -614,7 +615,13 @@ function closePlayer() {
   document.getElementById('player-overlay').classList.remove('open');
 }
 
-// Listen for video end
+function replayVideo() {
+  document.getElementById('afterVideo').classList.remove('open');
+  const player = document.getElementById('videoPlayer');
+  player.currentTime = 0;
+  player.play();
+}
+
 document.getElementById('videoPlayer').addEventListener('ended', () => {
   document.getElementById('afterVideo').classList.add('open');
 });
@@ -622,12 +629,22 @@ document.getElementById('videoPlayer').addEventListener('ended', () => {
 function startPracticeFromVideo() {
   closePlayer();
   showPage('practice');
+  renderPracticeSelector();
   renderPractice(currentLesson.id);
 }
 
-/* ============================================================
-   PRACTICE RENDER
-   ============================================================ */
+function renderPracticeSelector() {
+  const sel = document.getElementById('practiceSelector');
+  sel.innerHTML = '';
+  SORTED_LESSONS.forEach(L => {
+    const btn = document.createElement('button');
+    btn.textContent = L.displayTitle;
+    btn.className = (currentLesson && currentLesson.id === L.id) ? 'active' : '';
+    btn.onclick = () => renderPractice(L.id);
+    sel.appendChild(btn);
+  });
+}
+
 function renderPractice(lessonId) {
   const L = LESSONS.find(l => l.id === lessonId);
   if(!L) return;
@@ -638,9 +655,13 @@ function renderPractice(lessonId) {
   results = null;
   pendingMatch = null;
 
+  // Highlight the active button
+  document.querySelectorAll('#practiceSelector button').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent === L.displayTitle);
+  });
+
   const container = document.getElementById('practiceContent');
   
-  // Build Lesson Header
   let html = `
     <div class="lesson-head">
       <div class="lv-top">VIDEO PRACTICE</div>
@@ -655,7 +676,6 @@ function renderPractice(lessonId) {
     </div>
   `;
 
-  // Build Tasks
   html += `<div id="tasksContainer">`;
   L.activities.forEach((act, ai) => {
     html += `
@@ -671,7 +691,6 @@ function renderPractice(lessonId) {
   });
   html += `</div>`;
 
-  // Results Box & Actions
   html += `
     <div class="results-box" id="resultsBox"></div>
     <div class="actions-bar">
@@ -684,7 +703,6 @@ function renderPractice(lessonId) {
 
   container.innerHTML = html;
 
-  // Render each activity body
   L.activities.forEach((act, ai) => {
     const body = document.getElementById('body-' + ai);
     if(act.type==='match') renderMatch(ai, act, body);
@@ -695,37 +713,22 @@ function renderPractice(lessonId) {
   });
 }
 
-/* ============================================================
-   ACTIVITY RENDERERS (Logic preserved)
-   ============================================================ */
 function renderMatch(ai, act, body){
-  const leftCol = document.createElement('div');
-  leftCol.style.display='flex'; leftCol.style.flexDirection='column'; leftCol.style.gap='8px';
-  const rightCol = document.createElement('div');
-  rightCol.style.display='flex'; rightCol.style.flexDirection='column'; rightCol.style.gap='8px';
-  const grid = document.createElement('div');
-  grid.className='match-grid';
-  grid.appendChild(leftCol); grid.appendChild(rightCol);
+  const leftCol = document.createElement('div'); leftCol.style.display='flex'; leftCol.style.flexDirection='column'; leftCol.style.gap='8px';
+  const rightCol = document.createElement('div'); rightCol.style.display='flex'; rightCol.style.flexDirection='column'; rightCol.style.gap='8px';
+  const grid = document.createElement('div'); grid.className='match-grid'; grid.appendChild(leftCol); grid.appendChild(rightCol);
 
   act.pairs.forEach((p,i)=>{
-    const div = document.createElement('div');
-    div.className='match-cell';
-    div.dataset.side='L'; div.dataset.pair=i; div.dataset.idx=ai+'_'+i;
+    const div = document.createElement('div'); div.className='match-cell'; div.dataset.side='L'; div.dataset.pair=i;
     div.innerHTML = `<span class="num">${i+1}</span><span class="lbl">${p[0]}</span>`;
-    div.onclick = ()=> selectMatch(ai, div, act);
-    leftCol.appendChild(div);
+    div.onclick = ()=> selectMatch(ai, div, act); leftCol.appendChild(div);
   });
-
   const shuffled = act.pairs.map((p,i)=>({text:p[1], pairIdx:i})).sort(()=>Math.random()-0.5);
   shuffled.forEach((item,i)=>{
-    const div = document.createElement('div');
-    div.className='match-cell';
-    div.dataset.side='R'; div.dataset.pair=item.pairIdx; div.dataset.idx=ai+'_r_'+i;
+    const div = document.createElement('div'); div.className='match-cell'; div.dataset.side='R'; div.dataset.pair=item.pairIdx;
     div.innerHTML = `<span class="lbl">${item.text}</span>`;
-    div.onclick = ()=> selectMatch(ai, div, act);
-    rightCol.appendChild(div);
+    div.onclick = ()=> selectMatch(ai, div, act); rightCol.appendChild(div);
   });
-
   body.appendChild(grid);
   act.pairs.forEach((p,i)=>{ if(answers[ai+'_'+i]===undefined) answers[ai+'_'+i]=''; });
 }
@@ -733,85 +736,50 @@ function renderMatch(ai, act, body){
 function selectMatch(ai, el, act){
   if(finished) return;
   if(el.classList.contains('matched')){
-    const pairId = el.dataset.pair;
-    const container = el.closest('.match-grid');
-    container.querySelectorAll('.match-cell').forEach(c=>{
-      if(c.dataset.pair===pairId) c.classList.remove('matched');
-    });
-    answers[ai+'_'+pairId]='';
-    return;
+    const pairId = el.dataset.pair; const container = el.closest('.match-grid');
+    container.querySelectorAll('.match-cell').forEach(c=>{ if(c.dataset.pair===pairId) c.classList.remove('matched'); });
+    answers[ai+'_'+pairId]=''; return;
   }
   if(!pendingMatch){ pendingMatch = el; el.classList.add('selected'); return; }
   if(pendingMatch === el){ pendingMatch.classList.remove('selected'); pendingMatch=null; return; }
   if(pendingMatch.dataset.side === el.dataset.side){
-    pendingMatch.classList.remove('selected');
-    pendingMatch = el; el.classList.add('selected');
-    return;
+    pendingMatch.classList.remove('selected'); pendingMatch = el; el.classList.add('selected'); return;
   }
   const left = pendingMatch.dataset.side==='L' ? pendingMatch : el;
   const right = pendingMatch.dataset.side==='R' ? pendingMatch : el;
-  pendingMatch.classList.remove('selected');
-  pendingMatch = null;
+  pendingMatch.classList.remove('selected'); pendingMatch = null;
   answers[ai+'_'+left.dataset.pair] = right.dataset.pair;
-  left.classList.add('matched');
-  right.classList.add('matched');
+  left.classList.add('matched'); right.classList.add('matched');
 }
 
 function renderChoice(ai, act, body){
   act.questions.forEach((q, qi)=>{
-    const key = ai+'_'+qi;
-    const wrap = document.createElement('div');
-    wrap.className='question';
+    const key = ai+'_'+qi; const wrap = document.createElement('div'); wrap.className='question';
     const letters = ['A','B','C','D'];
-    wrap.innerHTML = `<div class="q-text">${qi+1}. ${q.q}</div>
-      <div class="options">${q.options.map((o,oi)=>
-        `<div class="option" data-opt="${oi}"><span class="dot"></span><span>${letters[oi]}. ${o}</span></div>`).join('')}</div>`;
+    wrap.innerHTML = `<div class="q-text">${qi+1}. ${q.q}</div><div class="options">${q.options.map((o,oi)=>`<div class="option" data-opt="${oi}"><span class="dot"></span><span>${letters[oi]}. ${o}</span></div>`).join('')}</div>`;
     wrap.querySelectorAll('.option').forEach(opt=>{
-      opt.onclick = ()=>{
-        if(finished) return;
-        wrap.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));
-        opt.classList.add('selected');
-        answers[key] = parseInt(opt.dataset.opt);
-      };
+      opt.onclick = ()=>{ if(finished) return; wrap.querySelectorAll('.option').forEach(o=>o.classList.remove('selected')); opt.classList.add('selected'); answers[key] = parseInt(opt.dataset.opt); };
     });
-    body.appendChild(wrap);
-    if(answers[key]===undefined) answers[key]=null;
+    body.appendChild(wrap); if(answers[key]===undefined) answers[key]=null;
   });
 }
 
 function renderFill(ai, act, body){
-  const bank = document.createElement('div');
-  bank.className='word-bank';
-  bank.innerHTML = act.bank.map(w=>`<span>${w}</span>`).join('');
-  body.appendChild(bank);
-
+  const bank = document.createElement('div'); bank.className='word-bank'; bank.innerHTML = act.bank.map(w=>`<span>${w}</span>`).join(''); body.appendChild(bank);
   act.questions.forEach((q, qi)=>{
-    const key = ai+'_'+qi;
-    const line = document.createElement('div');
-    line.className='fill-line';
-
+    const key = ai+'_'+qi; const line = document.createElement('div'); line.className='fill-line';
     if(q.multi){
-      let html = '';
-      const parts = q.text.split('______');
-      parts.forEach((part, pi)=>{
-        html += `<span>${part}</span>`;
-        if(pi < parts.length-1) html += `<input data-blank="${pi}" placeholder="...">`;
-      });
-      line.innerHTML = html;
-      body.appendChild(line);
+      let html = ''; const parts = q.text.split('______');
+      parts.forEach((part, pi)=>{ html += `<span>${part}</span>`; if(pi < parts.length-1) html += `<input data-blank="${pi}" placeholder="...">`; });
+      line.innerHTML = html; body.appendChild(line);
       if(!Array.isArray(answers[key])) answers[key] = q.multi.map(()=>'');
-      line.querySelectorAll('input').forEach((inp,bi)=>{
-        inp.oninput = ()=>{ if(!finished) answers[key][bi] = inp.value.trim().toLowerCase(); };
-      });
+      line.querySelectorAll('input').forEach((inp,bi)=>{ inp.oninput = ()=>{ if(!finished) answers[key][bi] = inp.value.trim().toLowerCase(); }; });
     } else if(!q.ans){
-      line.innerHTML = `<span style="color:var(--muted);font-style:italic;">${q.text}</span>`;
-      body.appendChild(line);
+      line.innerHTML = `<span style="color:var(--muted);font-style:italic;">${q.text}</span>`; body.appendChild(line);
     } else {
       const parts = q.text.split('______');
       line.innerHTML = `<span>${qi+1}.</span><span>${parts[0]}</span><input placeholder="..."><span>${parts[1]||''}</span><span class="fix-show"></span>`;
-      body.appendChild(line);
-      const inp = line.querySelector('input');
-      if(answers[key]) inp.value = answers[key];
+      body.appendChild(line); const inp = line.querySelector('input'); if(answers[key]) inp.value = answers[key];
       inp.oninput = ()=>{ if(!finished) answers[key] = inp.value.trim().toLowerCase(); };
     }
   });
@@ -819,88 +787,43 @@ function renderFill(ai, act, body){
 
 function renderTF(ai, act, body){
   act.questions.forEach((q, qi)=>{
-    const key = ai+'_'+qi;
-    const row = document.createElement('div');
-    row.className='tf-row';
-    row.innerHTML = `<div class="stmt">${qi+1}. ${q.stmt}</div>
-      <div class="tf-btns">
-        <button class="tf-btn" data-val="true">TRUE</button>
-        <button class="tf-btn" data-val="false">FALSE</button>
-      </div>`;
+    const key = ai+'_'+qi; const row = document.createElement('div'); row.className='tf-row';
+    row.innerHTML = `<div class="stmt">${qi+1}. ${q.stmt}</div><div class="tf-btns"><button class="tf-btn" data-val="true">TRUE</button><button class="tf-btn" data-val="false">FALSE</button></div>`;
     row.querySelectorAll('.tf-btn').forEach(btn=>{
-      btn.onclick = ()=>{
-        if(finished) return;
-        row.querySelectorAll('.tf-btn').forEach(b=>{ b.classList.remove('sel-true','sel-false'); });
-        btn.classList.add(btn.dataset.val==='true' ? 'sel-true' : 'sel-false');
-        answers[key] = btn.dataset.val==='true';
-      };
+      btn.onclick = ()=>{ if(finished) return; row.querySelectorAll('.tf-btn').forEach(b=>{ b.classList.remove('sel-true','sel-false'); }); btn.classList.add(btn.dataset.val==='true' ? 'sel-true' : 'sel-false'); answers[key] = btn.dataset.val==='true'; };
     });
-    body.appendChild(row);
-    if(answers[key]===undefined) answers[key]=null;
+    body.appendChild(row); if(answers[key]===undefined) answers[key]=null;
   });
 }
 
 function renderOrder(ai, act, body){
   act.questions.forEach((q, qi)=>{
-    const key = ai+'_'+qi;
-    const wrap = document.createElement('div');
-    wrap.className='order-question';
+    const key = ai+'_'+qi; const wrap = document.createElement('div'); wrap.className='order-question';
     const shuffled = [...q.words].sort(()=>Math.random()-0.5);
-    wrap.innerHTML = `<div class="num-lbl">${qi+1}. Build the sentence:</div>
-      <div class="order-words">${shuffled.map((w,i)=>`<span class="order-word" data-word="${w}">${w}</span>`).join('')}</div>
-      <div class="order-answer"><span class="ph">Click words above to build the sentence</span></div>
-      <div class="order-feedback"></div>`;
-    body.appendChild(wrap);
-    if(!Array.isArray(answers[key])) answers[key]=[];
-    
+    wrap.innerHTML = `<div class="num-lbl">${qi+1}. Build the sentence:</div><div class="order-words">${shuffled.map((w,i)=>`<span class="order-word" data-word="${w}">${w}</span>`).join('')}</div><div class="order-answer"><span class="ph">Click words above to build the sentence</span></div><div class="order-feedback"></div>`;
+    body.appendChild(wrap); if(!Array.isArray(answers[key])) answers[key]=[];
     wrap.querySelectorAll('.order-word').forEach(chip=>{
-      chip.onclick = ()=>{
-        if(finished || chip.classList.contains('used')) return;
-        chip.classList.add('used');
-        answers[key].push(chip.dataset.word);
-        renderOrderAnswer(key, wrap);
-      };
+      chip.onclick = ()=>{ if(finished || chip.classList.contains('used')) return; chip.classList.add('used'); answers[key].push(chip.dataset.word); renderOrderAnswer(key, wrap); };
     });
   });
 }
 
 function renderOrderAnswer(key, wrap){
-  const answerBox = wrap.querySelector('.order-answer');
-  answerBox.innerHTML = '';
-  const words = answers[key];
-  if(words.length===0){
-    answerBox.innerHTML = `<span class="ph">Click words above to build the sentence</span>`;
-    return;
-  }
+  const answerBox = wrap.querySelector('.order-answer'); answerBox.innerHTML = ''; const words = answers[key];
+  if(words.length===0){ answerBox.innerHTML = `<span class="ph">Click words above to build the sentence</span>`; return; }
   words.forEach((w, i)=>{
-    const chip = document.createElement('span');
-    chip.className='placed';
-    chip.textContent = w;
-    chip.onclick = ()=>{
-      if(finished) return;
-      words.splice(i,1);
-      wrap.querySelectorAll('.order-word').forEach(c=>{
-        if(words.includes(c.dataset.word)) c.classList.add('used');
-        else c.classList.remove('used');
-      });
-      renderOrderAnswer(key, wrap);
-    };
+    const chip = document.createElement('span'); chip.className='placed'; chip.textContent = w;
+    chip.onclick = ()=>{ if(finished) return; words.splice(i,1); wrap.querySelectorAll('.order-word').forEach(c=>{ if(words.includes(c.dataset.word)) c.classList.add('used'); else c.classList.remove('used'); }); renderOrderAnswer(key, wrap); };
     answerBox.appendChild(chip);
   });
 }
 
-/* ============================================================
-   FINISH & RESULTS
-   ============================================================ */
 function countUnanswered(){
   let n=0;
   currentLesson.activities.forEach((act, ai)=>{
     if(act.type==='match') act.pairs.forEach((p,i)=>{ if(!answers[ai+'_'+i]) n++; });
     else if(act.type==='choice') act.questions.forEach((q,qi)=>{ if(answers[ai+'_'+qi]===null || answers[ai+'_'+qi]===undefined) n++; });
-    else if(act.type==='fill') act.questions.forEach((q,qi)=>{
-      if(q.multi){ const arr = answers[ai+'_'+qi] || []; q.multi.forEach((_,bi)=>{ if(!arr[bi]) n++; }); }
-      else if(q.ans){ if(!answers[ai+'_'+qi]) n++; }
-    });
+    else if(act.type==='fill') act.questions.forEach((q,qi)=>{ if(q.multi){ const arr = answers[ai+'_'+qi] || []; q.multi.forEach((_,bi)=>{ if(!arr[bi]) n++; }); } else if(q.ans){ if(!answers[ai+'_'+qi]) n++; } });
     else if(act.type==='tf') act.questions.forEach((q,qi)=>{ if(answers[ai+'_'+qi]===null || answers[ai+'_'+qi]===undefined) n++; });
     else if(act.type==='order') act.questions.forEach((q,qi)=>{ if(!answers[ai+'_'+qi] || answers[ai+'_'+qi].length===0) n++; });
   });
@@ -909,160 +832,81 @@ function countUnanswered(){
 
 function finishLesson(){
   const unanswered = countUnanswered();
-  if(unanswered > 0){
-    if(!confirm(`You have ${unanswered} unanswered question(s).\nPress OK to finish anyway, or Cancel to go back.`)) return;
-  }
-  finished = true;
-  let total = 0, correct = 0, incorrect = 0;
-  const details = [];
+  if(unanswered > 0){ if(!confirm(`You have ${unanswered} unanswered question(s).\nPress OK to finish anyway, or Cancel to go back.`)) return; }
+  finished = true; let total = 0, correct = 0, incorrect = 0; const details = [];
 
   currentLesson.activities.forEach((act, ai)=>{
     const body = document.getElementById('body-'+ai);
-
     if(act.type==='match'){
       body.querySelectorAll('.match-cell[data-side="L"]').forEach(cell=>{
-        total++;
-        const chosen = answers[ai+'_'+cell.dataset.pair];
-        if(String(chosen)===String(cell.dataset.pair)){
-          correct++; cell.classList.add('finished-ok');
-        } else {
+        total++; const chosen = answers[ai+'_'+cell.dataset.pair];
+        if(String(chosen)===String(cell.dataset.pair)){ correct++; cell.classList.add('finished-ok'); }
+        else {
           incorrect++; cell.classList.add('finished-bad');
-          body.querySelectorAll('.match-cell[data-side="R"]').forEach(r=>{
-            if(r.dataset.pair===chosen) r.classList.add('finished-bad');
-            if(r.dataset.pair===cell.dataset.pair) r.classList.add('finished-ok');
-          });
+          body.querySelectorAll('.match-cell[data-side="R"]').forEach(r=>{ if(r.dataset.pair===chosen) r.classList.add('finished-bad'); if(r.dataset.pair===cell.dataset.pair) r.classList.add('finished-ok'); });
           details.push({task:act.title, q:`"${cell.querySelector('.lbl').textContent}" → correct: ${act.pairs[cell.dataset.pair][1]}`});
         }
       });
-    }
-    else if(act.type==='choice'){
+    } else if(act.type==='choice'){
       body.querySelectorAll('.question').forEach((qEl, qi)=>{
-        total++;
-        const chosen = answers[ai+'_'+qi];
-        const correctIdx = act.questions[qi].ans;
-        qEl.querySelectorAll('.option').forEach((o, oi)=>{
-          o.style.pointerEvents='none';
-          if(oi===correctIdx) o.classList.add('correct');
-          if(chosen!==null && oi===chosen && chosen!==correctIdx) o.classList.add('wrong');
-        });
-        if(chosen===correctIdx) correct++;
-        else { incorrect++; details.push({task:act.title, q:`Q${qi+1}. ${act.questions[qi].q} — correct: ${act.questions[qi].options[correctIdx]}`}); }
+        total++; const chosen = answers[ai+'_'+qi]; const correctIdx = act.questions[qi].ans;
+        qEl.querySelectorAll('.option').forEach((o, oi)=>{ o.style.pointerEvents='none'; if(oi===correctIdx) o.classList.add('correct'); if(chosen!==null && oi===chosen && chosen!==correctIdx) o.classList.add('wrong'); });
+        if(chosen===correctIdx) correct++; else { incorrect++; details.push({task:act.title, q:`Q${qi+1}. ${act.questions[qi].q} — correct: ${act.questions[qi].options[correctIdx]}`}); }
       });
-    }
-    else if(act.type==='fill'){
+    } else if(act.type==='fill'){
       body.querySelectorAll('.fill-line').forEach((line, li)=>{
         const q = act.questions[li];
         if(q.multi){
-          total += q.multi.length;
-          const inputs = line.querySelectorAll('input');
+          total += q.multi.length; const inputs = line.querySelectorAll('input');
           inputs.forEach((inp, bi)=>{
-            const userAns = (answers[ai+'_'+li] && answers[ai+'_'+li][bi] || '').toLowerCase().trim();
-            const correctAns = q.multi[bi].toLowerCase().trim();
-            inp.disabled = true;
+            const userAns = (answers[ai+'_'+li] && answers[ai+'_'+li][bi] || '').toLowerCase().trim(); const correctAns = q.multi[bi].toLowerCase().trim(); inp.disabled = true;
             if(userAns===correctAns){ correct++; inp.classList.add('correct'); }
-            else { incorrect++; inp.classList.add('wrong');
-              const show = document.createElement('span'); show.className='fix-show'; show.textContent = ' → '+correctAns;
-              inp.after(show);
-              details.push({task:act.title, q:`${q.text} — blank ${bi+1} correct: ${correctAns}`});
-            }
+            else { incorrect++; inp.classList.add('wrong'); const show = document.createElement('span'); show.className='fix-show'; show.textContent = ' → '+correctAns; inp.after(show); details.push({task:act.title, q:`${q.text} — blank ${bi+1} correct: ${correctAns}`}); }
           });
         } else if(q.ans){
-          total++;
-          const userAns = (answers[ai+'_'+li] || '').toLowerCase().trim();
-          const correctAns = q.ans.toLowerCase().trim();
-          const inp = line.querySelector('input');
-          const show = line.querySelector('.fix-show');
-          inp.disabled = true;
+          total++; const userAns = (answers[ai+'_'+li] || '').toLowerCase().trim(); const correctAns = q.ans.toLowerCase().trim();
+          const inp = line.querySelector('input'); const show = line.querySelector('.fix-show'); inp.disabled = true;
           if(userAns===correctAns){ correct++; inp.classList.add('correct'); }
-          else { incorrect++; inp.classList.add('wrong'); show.textContent = '→ '+correctAns;
-            details.push({task:act.title, q:`${q.text.replace('______','___')} — correct: ${correctAns}`});
-          }
+          else { incorrect++; inp.classList.add('wrong'); show.textContent = '→ '+correctAns; details.push({task:act.title, q:`${q.text.replace('______','___')} — correct: ${correctAns}`}); }
         }
       });
-    }
-    else if(act.type==='tf'){
+    } else if(act.type==='tf'){
       body.querySelectorAll('.tf-row').forEach((row, qi)=>{
-        total++;
-        const chosen = answers[ai+'_'+qi];
-        const correctVal = act.questions[qi].ans;
-        row.querySelectorAll('.tf-btn').forEach(btn=>{
-          btn.style.pointerEvents='none';
-          const val = btn.dataset.val==='true';
-          if(val===correctVal) btn.classList.add('reveal-correct');
-          if(chosen!==null && val===chosen && chosen!==correctVal) btn.classList.add('reveal-wrong');
-        });
-        if(chosen===correctVal) correct++;
-        else { incorrect++; details.push({task:act.title, q:`${act.questions[qi].stmt} — correct: ${correctVal?'TRUE':'FALSE'}`}); }
+        total++; const chosen = answers[ai+'_'+qi]; const correctVal = act.questions[qi].ans;
+        row.querySelectorAll('.tf-btn').forEach(btn=>{ btn.style.pointerEvents='none'; const val = btn.dataset.val==='true'; if(val===correctVal) btn.classList.add('reveal-correct'); if(chosen!==null && val===chosen && chosen!==correctVal) btn.classList.add('reveal-wrong'); });
+        if(chosen===correctVal) correct++; else { incorrect++; details.push({task:act.title, q:`${act.questions[qi].stmt} — correct: ${correctVal?'TRUE':'FALSE'}`}); }
       });
-    }
-    else if(act.type==='order'){
+    } else if(act.type==='order'){
       body.querySelectorAll('.order-question').forEach((wrap, qi)=>{
-        total++;
-        const userSent = (answers[ai+'_'+qi]||[]).join(' ');
-        const correctSent = act.questions[qi].ans;
-        const fb = wrap.querySelector('.order-feedback');
+        total++; const userSent = (answers[ai+'_'+qi]||[]).join(' '); const correctSent = act.questions[qi].ans; const fb = wrap.querySelector('.order-feedback');
         const norm = s => s.toLowerCase().replace(/[.,!?]/g,'').replace(/\s+/g,' ').trim();
-        if(norm(userSent)===norm(correctSent)){
-          correct++; fb.className='order-feedback ok'; fb.textContent = '✓ Correct: '+correctSent;
-        } else {
-          incorrect++; fb.className='order-feedback bad';
-          fb.textContent = '✕ Your answer: '+ (userSent||'(empty)') +' — Correct: '+correctSent;
-          details.push({task:act.title, q:`Sentence ${qi+1} — correct: ${correctSent}`});
-        }
+        if(norm(userSent)===norm(correctSent)){ correct++; fb.className='order-feedback ok'; fb.textContent = '✓ Correct: '+correctSent; }
+        else { incorrect++; fb.className='order-feedback bad'; fb.textContent = '✕ Your answer: '+ (userSent||'(empty)') +' — Correct: '+correctSent; details.push({task:act.title, q:`Sentence ${qi+1} — correct: ${correctSent}`}); }
         wrap.querySelectorAll('.order-word, .placed').forEach(c=>c.style.pointerEvents='none');
       });
     }
   });
 
-  const percent = total>0 ? Math.round(correct/total*100) : 0;
-  results = {total, correct, incorrect, percent, details};
-
-  const saved = store.get('vocabtok_practice', {});
-  saved[currentLesson.id] = {total, correct, incorrect, percent, date: new Date().toISOString()};
-  store.set('vocabtok_practice', saved);
-
-  document.getElementById('finishBtn').style.display='none';
-  document.getElementById('seeResultsBtn').style.display='inline-flex';
-  showResultsBox();
-  window.scrollTo({top: document.getElementById('resultsBox').offsetTop - 40, behavior:'smooth'});
+  const percent = total>0 ? Math.round(correct/total*100) : 0; results = {total, correct, incorrect, percent, details};
+  const saved = store.get('vocabtok_practice', {}); saved[currentLesson.id] = {total, correct, incorrect, percent, date: new Date().toISOString()}; store.set('vocabtok_practice', saved);
+  document.getElementById('finishBtn').style.display='none'; document.getElementById('seeResultsBtn').style.display='inline-flex'; showResultsBox(); window.scrollTo({top: document.getElementById('resultsBox').offsetTop - 40, behavior:'smooth'});
 }
 
 function showResultsBox(){
   const box = document.getElementById('resultsBox');
   box.innerHTML = `
     <div style="font-size:15px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;font-weight:900;margin-bottom:12px;">Lesson Result</div>
-    <div class="score-big">${results.correct}/${results.total}</div>
-    <div class="pct">${results.percent}%</div>
-    <div class="results-grid">
-      <div><div class="n">${results.total}</div><div class="l">Total</div></div>
-      <div><div class="n" style="color:var(--ok)">${results.correct}</div><div class="l">Correct</div></div>
-      <div><div class="n" style="color:var(--err)">${results.incorrect}</div><div class="l">Incorrect</div></div>
-    </div>
-    ${results.details.length ? `
-      <div style="text-align:left;margin-top:20px;">
-        <div style="font-size:14px;font-weight:900;color:var(--muted);text-transform:uppercase;margin-bottom:10px;letter-spacing:1px;">Review these mistakes:</div>
-        <div style="max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;">
-          ${results.details.slice(0,50).map(d=>`
-            <div style="background:var(--bg3);border-radius:10px;padding:12px 16px;font-size:14px;border:1px solid var(--border);">
-              <div style="color:var(--pink);font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">${d.task}</div>
-              <div style="color:var(--text);margin-top:4px;">${d.q}</div>
-            </div>`).join('')}
-        </div>
-      </div>` : `<div style="margin-top:20px;background:rgba(0,230,118,0.15);color:var(--ok);padding:16px;border-radius:12px;font-weight:800;border:1px solid rgba(0,230,118,0.3);">🎉 Perfect! No mistakes.</div>`}
+    <div class="score-big">${results.correct}/${results.total}</div><div class="pct">${results.percent}%</div>
+    <div class="results-grid"><div><div class="n">${results.total}</div><div class="l">Total</div></div><div><div class="n" style="color:var(--ok)">${results.correct}</div><div class="l">Correct</div></div><div><div class="n" style="color:var(--err)">${results.incorrect}</div><div class="l">Incorrect</div></div></div>
+    ${results.details.length ? `<div style="text-align:left;margin-top:20px;"><div style="font-size:14px;font-weight:900;color:var(--muted);text-transform:uppercase;margin-bottom:10px;letter-spacing:1px;">Review these mistakes:</div><div style="max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;">${results.details.slice(0,50).map(d=>`<div style="background:var(--bg3);border-radius:10px;padding:12px 16px;font-size:14px;border:1px solid var(--border);"><div style="color:var(--pink);font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">${d.task}</div><div style="color:var(--text);margin-top:4px;">${d.q}</div></div>`).join('')}</div></div>` : `<div style="margin-top:20px;background:rgba(0,230,118,0.15);color:var(--ok);padding:16px;border-radius:12px;font-weight:800;border:1px solid rgba(0,230,118,0.3);">🎉 Perfect! No mistakes.</div>`}
     <button class="btn" style="margin-top:24px;width:100%;" onclick="showPage('discover')">Choose another lesson</button>
   `;
   box.classList.add('show');
 }
 
-function scrollToResults(){
-  document.getElementById('resultsBox').scrollIntoView({behavior:'smooth'});
-}
+function scrollToResults(){ document.getElementById('resultsBox').scrollIntoView({behavior:'smooth'}); }
+function tryAgain(){ renderPractice(currentLesson.id); }
 
-function tryAgain(){
-  renderPractice(currentLesson.id);
-}
-
-/* INIT */
 renderDiscover();
 </script>
 </body>
