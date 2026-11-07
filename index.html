@@ -224,6 +224,7 @@ h2{font-size:22px;font-weight:800;margin:0 0 12px;}
 </div>
 
 <script>
+// GitHub-та жұмыс істеуі үшін видеолардың жолы
 const VIDEO_BASE_PATH = "videos/"; 
 
 const LESSONS = [
@@ -558,7 +559,6 @@ function showPage(pageId) {
   window.scrollTo({top:0,behavior:'smooth'});
 
   if(pageId === 'practice' && !currentLesson) {
-    // If no lesson selected yet, show the first one
     renderPracticeSelector();
     renderPractice(SORTED_LESSONS[0].id);
   }
@@ -655,7 +655,6 @@ function renderPractice(lessonId) {
   results = null;
   pendingMatch = null;
 
-  // Highlight the active button
   document.querySelectorAll('#practiceSelector button').forEach(btn => {
     btn.classList.toggle('active', btn.textContent === L.displayTitle);
   });
